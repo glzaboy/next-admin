@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@arco-design/web-react": "^2.43.2",
+    "@arco-themes/react-arco-pro": "^0.0.7",
     "@next/font": "13.1.1",
     "@reduxjs/toolkit": "^1.9.1",
     "@types/node": "18.11.18",
@@ -22,5 +23,11 @@
     "react-dom": "18.2.0",
     "react-redux": "^8.0.5",
     "typescript": "4.9.4"
+  },
+  "devDependencies": {
+    "less": "^4.1.3",
+    "less-loader": "^11.1.0",
+    "next-transpile-modules": "^10.0.0",
+    "next-with-less": "^2.0.5"
   }
 }
