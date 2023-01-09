@@ -1,54 +1,54 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
+import defaultSettings from "../settings.json";
+
 // import { version } from "../../../package.json";
 
 const namespace = "global";
 
-export interface IGlobalState {
-  /**
-   * 当前屏幕尺寸
-   */
-  currentScreen?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
-  /**
-   * 设备类型
-   */
-  screenType?: "pc" | "mobile" | "table";
-  /**
-   * 菜单状态
-   */
-  menuStatus?: "collapsed" | "hide" | "expand";
-  /**
-   * 主题色
-   */
-  themeColor?: "system" | "light" | "dark";
+export interface GlobalState {
+  settings?: typeof defaultSettings;
+  userInfo?: {
+    name?: string;
+    avatar?: string;
+    job?: string;
+    organization?: string;
+    location?: string;
+    email?: string;
+    permissions: Record<string, string[]>;
+  };
+  userLoading?: boolean;
+  lang?: string;
+  theme?: string;
 }
 
-const initialState: IGlobalState = {
-  menuStatus: "collapsed",
-  themeColor: "system",
+const initialState: GlobalState = {
+  settings: defaultSettings,
+  userInfo: {
+    permissions: {},
+  },
 };
-
 // 创建带有命名空间的reducer
 const globalSlice = createSlice({
   name: namespace,
   initialState,
   reducers: {
-    switchScreen: (state, action: PayloadAction<IGlobalState>) => {
-      if (action?.payload?.menuStatus != undefined) {
-        state.menuStatus = action.payload.menuStatus;
-      }
-      if (action?.payload?.screenType != undefined) {
-        state.screenType = action.payload.screenType;
-      }
-      if (action?.payload?.currentScreen != undefined) {
-        state.currentScreen = action.payload.currentScreen;
-      }
+    updateSettings: (state, action: PayloadAction<GlobalState>) => {
+      const { settings } = action.payload;
+      state.settings = settings;
     },
-    switchTheme: (state, action: PayloadAction<IGlobalState>) => {
-      // console.log(action);
-      if (action?.payload?.themeColor != undefined) {
-        state.themeColor = action.payload.themeColor;
-      }
+    updateUserInfo: (state, action: PayloadAction<GlobalState>) => {
+      const { userInfo = initialState.userInfo, userLoading } = action.payload;
+      state.userInfo = userInfo;
+      state.userLoading = userLoading;
+    },
+    setLang: (state, action: PayloadAction<GlobalState>) => {
+      const { lang } = action.payload;
+      state.lang = lang;
+    },
+    setTheme: (state, action: PayloadAction<GlobalState>) => {
+      const { theme } = action.payload;
+      state.theme = theme;
     },
   },
   extraReducers: () => {},
@@ -56,6 +56,7 @@ const globalSlice = createSlice({
 
 export const selectGlobal = (state: RootState) => state.global;
 
-export const { switchScreen, switchTheme } = globalSlice.actions;
+export const { updateSettings, updateUserInfo, setLang, setTheme } =
+  globalSlice.actions;
 
 export default globalSlice.reducer;
