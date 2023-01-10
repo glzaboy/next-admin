@@ -18,7 +18,7 @@ export interface GlobalState {
     permissions: Record<string, string[]>;
   };
   userLoading?: boolean;
-  lang?: string;
+  lang?: "zh-CN" | "en-US";
   theme?: string;
 }
 

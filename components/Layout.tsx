@@ -1,9 +1,5 @@
 import { useAppSelector, useAppDispatch } from "../modules/store";
-import {
-  selectGlobal,
-  updateSettings,
-  updateUserInfo,
-} from "../modules/global";
+import { selectGlobal } from "../modules/global";
 import React, { useState, ReactNode, useRef, useEffect } from "react";
 import { Layout, Menu, Breadcrumb, Spin } from "@arco-design/web-react";
 import cs from "classnames";
@@ -24,9 +20,11 @@ import qs from "query-string";
 import useRoute, { IRoute } from "../routes";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
+import useLocale from "../utils/useLocale";
 import Link from "next/link";
 import getUrlParams from "../utils/getUrlParams";
 import styles from "../styles/layout.module.less";
+import changeTheme from "../utils/changeTheme";
 import NoAccess from "../pages/exception/403";
 
 const MenuItem = Menu.Item;
@@ -66,8 +64,8 @@ export const LayoutDefault = ({ children }: any) => {
   const router = useRouter();
   const pathname = router.pathname;
   const currentComponent = qs.parseUrl(pathname).url.slice(1);
-
-  const { userInfo, settings, userLoading } = globalState;
+  const locale = useLocale();
+  const { userInfo, settings, lang, theme } = globalState;
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [routes, defaultRoute] = useRoute(userInfo?.permissions);
 
@@ -93,7 +91,7 @@ export const LayoutDefault = ({ children }: any) => {
 
   const [breadcrumb, setBreadCrumb] = useState([]);
 
-  function onClickMenuItem(key) {
+  function onClickMenuItem(key: string) {
     setSelectedKeys([key]);
   }
   function toggleCollapse() {
@@ -102,7 +100,14 @@ export const LayoutDefault = ({ children }: any) => {
   const paddingLeft = showMenu ? { paddingLeft: menuWidth } : {};
   const paddingTop = showNavbar ? { paddingTop: navbarHeight } : {};
   const paddingStyle = { ...paddingLeft, ...paddingTop };
-  function renderRoutes(locale) {
+
+  useEffect(() => {
+    document.cookie = `arco-lang=${lang}; path=/`;
+    document.cookie = `arco-theme=${theme}; path=/`;
+    changeTheme(theme);
+  }, [lang, theme]);
+
+  function renderRoutes(locale: Record<string, string>) {
     routeMap.current.clear();
     return function travel(_routes: IRoute[], level, parentNode = []) {
       return _routes.map((route) => {
@@ -146,13 +151,40 @@ export const LayoutDefault = ({ children }: any) => {
         return (
           <MenuItem key={route.key}>
             <Link href={`/${route.key}`}>
-              <a>{titleDom}</a>
+              {/* <a> */}
+              {titleDom}
+              {/* </a> */}
             </Link>
           </MenuItem>
         );
       });
     };
   }
+  function updateMenuStatus() {
+    const pathKeys = pathname.split("/");
+    const newSelectedKeys: string[] = [];
+    const newOpenKeys: string[] = [...openKeys];
+    while (pathKeys.length > 0) {
+      const currentRouteKey = pathKeys.join("/");
+      const menuKey = currentRouteKey.replace(/^\//, "");
+      const menuType = menuMap.current.get(menuKey);
+      if (menuType && menuType.menuItem) {
+        newSelectedKeys.push(menuKey);
+      }
+      if (menuType && menuType.subMenu && !openKeys.includes(menuKey)) {
+        newOpenKeys.push(menuKey);
+      }
+      pathKeys.pop();
+    }
+    setSelectedKeys(newSelectedKeys);
+    setOpenKeys(newOpenKeys);
+  }
+
+  // useEffect(() => {
+  //   const routeConfig = routeMap.current.get(pathname);
+  //   setBreadCrumb(routeConfig || []);
+  //   updateMenuStatus();
+  // }, [pathname]);
 
   return (
     <>
@@ -162,7 +194,7 @@ export const LayoutDefault = ({ children }: any) => {
             [styles["layout-navbar-hidden"]]: !showNavbar,
           })}
         >
-          {/* <Navbar show={showNavbar} /> */}
+          <Navbar show={!!showNavbar} />
         </div>
         <Layout>
           {showMenu && (
@@ -186,7 +218,7 @@ export const LayoutDefault = ({ children }: any) => {
                     setOpenKeys(openKeys);
                   }}
                 >
-                  {/* {renderRoutes(locale)(routes, 1)} */}
+                  {renderRoutes(locale)(routes, 1)}
                 </Menu>
               </div>
               <div className={styles["collapse-btn"]} onClick={toggleCollapse}>
@@ -196,7 +228,7 @@ export const LayoutDefault = ({ children }: any) => {
           )}
           <Layout className={styles["layout-content"]} style={paddingStyle}>
             <div className={styles["layout-content-wrapper"]}>
-              {/* {!!breadcrumb.length && (
+              {!!breadcrumb.length && (
                 <div className={styles["layout-breadcrumb"]}>
                   <Breadcrumb>
                     {breadcrumb.map((node, index) => (
@@ -206,10 +238,10 @@ export const LayoutDefault = ({ children }: any) => {
                     ))}
                   </Breadcrumb>
                 </div>
-              )} */}
+              )}
               <Content>
-                {/* {routeMap.current.has(pathname) ? children : <NoAccess />} */}
-                {children}
+                {routeMap.current.has(pathname) ? children : <NoAccess />}
+                {/* {children} */}
               </Content>
             </div>
             {showFooter && <Footer />}

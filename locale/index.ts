@@ -1,4 +1,4 @@
-const i18n = {
+  const i18n = {
   'en-US': {
     'menu.welcome': 'Welcome',
     'menu.dashboard': 'Dashboard',

@@ -31,23 +31,21 @@ import {
   setTheme,
   updateUserInfo,
 } from "../../modules/global";
-// import { GlobalState } from "@/store";
-// import { GlobalContext } from '@/context';
-// import useLocale from "@/utils/useLocale";
 // import Logo from "@/assets/logo.svg";
 // import MessageBox from "../MessageBox";
 import IconButton from "./IconButton";
-// import Settings from "../Settings";
+import Settings from "../Settings";
 import styles from "./style/index.module.less";
-// import defaultLocale from "@/locale";
+import defaultLocale from "../../locale";
 import useStorage from "../../utils/useStorage";
+import useLocale from "../../utils/useLocale";
 import { generatePermission } from "../../routes";
 
 function Navbar({ show }: { show: boolean }) {
   const globalState = useAppSelector(selectGlobal);
   const dispatch = useAppDispatch();
 
-  // const t = useLocale();
+  const t = useLocale();
   const { userInfo, userLoading, lang, theme } = globalState;
 
   const [_, setUserStatus] = useStorage("userStatus");
@@ -81,11 +79,11 @@ function Navbar({ show }: { show: boolean }) {
   if (!show) {
     return (
       <div className={styles["fixed-settings"]}>
-        {/* <Settings
+        <Settings
           trigger={
             <Button icon={<IconSettings />} type="primary" size="large" />
           }
-        /> */}
+        />
       </div>
     );
   }
@@ -198,7 +196,9 @@ function Navbar({ show }: { show: boolean }) {
             <IconButton
               icon={theme !== "dark" ? <IconMoonFill /> : <IconSunFill />}
               onClick={() =>
-                dispatch(setTheme({ theme: "light" ? "dark" : "light" }))
+                dispatch(
+                  setTheme({ theme: theme === "light" ? "dark" : "light" })
+                )
               }
             />
           </Tooltip>

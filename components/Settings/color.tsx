@@ -1,20 +1,21 @@
-import React from 'react';
-import { Trigger, Typography } from '@arco-design/web-react';
-import { SketchPicker } from 'react-color';
-import { generate, getRgbStr } from '@arco-design/color';
-import { useSelector, useDispatch } from 'react-redux';
-import { GlobalState } from '../../store';
-import useLocale from '@/utils/useLocale';
-import styles from './style/color-panel.module.less';
+import React from "react";
+import { Trigger, Typography } from "@arco-design/web-react";
+import { SketchPicker } from "react-color";
+import { generate, getRgbStr } from "@arco-design/color";
+import { useAppSelector, useAppDispatch } from "../../modules/store";
+import { selectGlobal } from "../../modules/global";
+import useLocale from "../../utils/useLocale";
+import styles from "./style/color-panel.module.less";
 
 function ColorPanel() {
+  const globalState = useAppSelector(selectGlobal);
+  const dispatch = useAppDispatch();
   const theme =
-    document.querySelector('body').getAttribute('arco-theme') || 'light';
-  const settings = useSelector((state: GlobalState) => state.settings);
+    document.querySelector("body").getAttribute("arco-theme") || "light";
+  const { settings } = globalState;
   const locale = useLocale();
-  const themeColor = settings.themeColor;
+  const themeColor = settings?.themeColor;
   const list = generate(themeColor, { list: true });
-  const dispatch = useDispatch();
 
   return (
     <div>
@@ -27,12 +28,12 @@ function ColorPanel() {
             onChangeComplete={(color) => {
               const newColor = color.hex;
               dispatch({
-                type: 'update-settings',
+                type: "update-settings",
                 payload: { settings: { ...settings, themeColor: newColor } },
               });
               const newList = generate(newColor, {
                 list: true,
-                dark: theme === 'dark',
+                dark: theme === "dark",
               });
               newList.forEach((l, index) => {
                 const rgbStr = getRgbStr(l);
@@ -63,7 +64,7 @@ function ColorPanel() {
         ))}
       </ul>
       <Typography.Paragraph style={{ fontSize: 12 }}>
-        {locale['settings.color.tooltip']}
+        {locale["settings.color.tooltip"]}
       </Typography.Paragraph>
     </div>
   );

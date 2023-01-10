@@ -18,6 +18,10 @@ export const routes: IRoute[] = [
     children: [
       {
         name: "menu.dashboard.workplace",
+        key: "/",
+      },
+      {
+        name: "menu.dashboard.workplace",
         key: "dashboard/workplace",
       },
       {
