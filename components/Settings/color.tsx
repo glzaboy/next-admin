@@ -2,16 +2,16 @@ import React from "react";
 import { Trigger, Typography } from "@arco-design/web-react";
 import { SketchPicker } from "react-color";
 import { generate, getRgbStr } from "@arco-design/color";
-import { useAppSelector, useAppDispatch } from "../../modules/store";
-import { selectGlobal } from "../../modules/global";
-import useLocale from "../../utils/useLocale";
+import { useAppSelector, useAppDispatch } from "@/modules/store";
+import { selectGlobal } from "@/modules/global";
+import useLocale from "@/utils/useLocale";
 import styles from "./style/color-panel.module.less";
 
 function ColorPanel() {
   const globalState = useAppSelector(selectGlobal);
   const dispatch = useAppDispatch();
   const theme =
-    document.querySelector("body").getAttribute("arco-theme") || "light";
+    document.querySelector("body")?.getAttribute("arco-theme") || "light";
   const { settings } = globalState;
   const locale = useLocale();
   const themeColor = settings?.themeColor;

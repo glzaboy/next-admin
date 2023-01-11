@@ -1,7 +1,7 @@
 import React from "react";
 import { Result, Button } from "@arco-design/web-react";
 import locale from "./locale";
-import useLocale from "../../../utils/useLocale";
+import useLocale from "@/utils/useLocale";
 import styles from "./style/index.module.less";
 
 function Exception403() {

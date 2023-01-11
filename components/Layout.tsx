@@ -1,5 +1,5 @@
-import { useAppSelector, useAppDispatch } from "../modules/store";
-import { selectGlobal } from "../modules/global";
+import { useAppSelector, useAppDispatch } from "@/modules/store";
+import { selectGlobal } from "@/modules/global";
 import React, { useState, ReactNode, useRef, useEffect } from "react";
 import { Layout, Menu, Breadcrumb, Spin } from "@arco-design/web-react";
 import cs from "classnames";
@@ -18,14 +18,14 @@ import {
 import { useRouter } from "next/router";
 import qs from "query-string";
 import useRoute, { IRoute } from "../routes";
-import Navbar from "../components/NavBar";
-import Footer from "../components/Footer";
-import useLocale from "../utils/useLocale";
+import Navbar from "@/components/NavBar";
+import Footer from "@/components/Footer";
+import useLocale from "@/utils/useLocale";
 import Link from "next/link";
-import getUrlParams from "../utils/getUrlParams";
-import styles from "../styles/layout.module.less";
-import changeTheme from "../utils/changeTheme";
-import NoAccess from "../pages/exception/403";
+import getUrlParams from "@/utils/getUrlParams";
+import styles from "@/styles/layout.module.less";
+import changeTheme from "@/utils/changeTheme";
+import NoAccess from "@/pages/exception/403";
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -104,12 +104,12 @@ export const LayoutDefault = ({ children }: any) => {
   useEffect(() => {
     document.cookie = `arco-lang=${lang}; path=/`;
     document.cookie = `arco-theme=${theme}; path=/`;
-    changeTheme(theme);
+    changeTheme(theme || "");
   }, [lang, theme]);
 
   function renderRoutes(locale: Record<string, string>) {
     routeMap.current.clear();
-    return function travel(_routes: IRoute[], level, parentNode = []) {
+    return function travel(_routes: IRoute[], level: number, parentNode = []) {
       return _routes.map((route) => {
         const { breadcrumb = true, ignore } = route;
         const iconDom = getIconFromKey(route.key);

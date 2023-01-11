@@ -1,4 +1,4 @@
-import auth, { AuthParams } from "./utils/authentication";
+import auth, { AuthParams } from "@/utils/authentication";
 import { useEffect, useMemo, useState } from "react";
 
 export type IRoute = AuthParams & {

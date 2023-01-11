@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Drawer, Alert, Message } from "@arco-design/web-react";
 import { IconSettings } from "@arco-design/web-react/icon";
 import copy from "copy-to-clipboard";
-import { useAppSelector, useAppDispatch } from "../../modules/store";
-import { selectGlobal } from "../../modules/global";
+import { useAppSelector, useAppDispatch } from "@/modules/store";
+import { selectGlobal } from "@/modules/global";
 import Block from "./block";
 import ColorPanel from "./color";
-import IconButton from "../NavBar/IconButton";
-import useLocale from "../../utils/useLocale";
+import IconButton from "@/components/NavBar/IconButton";
+import useLocale from "@/utils/useLocale";
 
 interface SettingProps {
   trigger?: React.ReactElement;

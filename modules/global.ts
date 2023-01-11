@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
-import defaultSettings from "../settings.json";
+import defaultSettings from "@/settings.json";
 
 // import { version } from "../../../package.json";
 

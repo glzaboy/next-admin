@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
 import { Switch, Divider, InputNumber } from "@arco-design/web-react";
-import { useAppSelector, useAppDispatch } from "../../modules/store";
-import { selectGlobal, updateSettings } from "../../modules/global";
-import useLocale from "../../utils/useLocale";
+import { useAppSelector, useAppDispatch } from "@/modules/store";
+import { selectGlobal, updateSettings } from "@/modules/global";
+import useLocale from "@/utils/useLocale";
 import styles from "./style/block.module.less";
 
 export interface BlockProps {
