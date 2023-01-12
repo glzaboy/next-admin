@@ -7,7 +7,17 @@ import styles from "./style/block.module.less";
 
 export interface BlockProps {
   title?: ReactNode;
-  options?: { name: string; value: string; type?: "switch" | "number" }[];
+  options?: {
+    name: string;
+    value:
+      | "colorWeek"
+      | "navbar"
+      | "menu"
+      | "footer"
+      | "themeColor"
+      | "menuWidth";
+    type?: "switch" | "number";
+  }[];
   children?: ReactNode;
 }
 
@@ -18,6 +28,7 @@ export default function Block(props: BlockProps) {
   const { title, options, children } = props;
   const locale = useLocale();
   const { settings: setting } = globalState;
+  console.log(setting);
 
   return (
     <div className={styles.block}>
@@ -29,7 +40,7 @@ export default function Block(props: BlockProps) {
           return (
             <div className={styles["switch-wrapper"]} key={option.value}>
               <span>{locale[option.name]}</span>
-              {type === "switch" && (
+              {type === "switch" && setting != undefined && (
                 <Switch
                   size="small"
                   checked={!!setting[option.value]}
@@ -53,7 +64,7 @@ export default function Block(props: BlockProps) {
                   }}
                 />
               )}
-              {type === "number" && (
+              {type === "number" && setting != undefined && (
                 <InputNumber
                   style={{ width: 80 }}
                   size="small"
@@ -63,7 +74,6 @@ export default function Block(props: BlockProps) {
                       ...setting,
                       [option.value]: value,
                     };
-                    console.log(newSetting);
                     dispatch(
                       updateSettings({
                         settings: newSetting,

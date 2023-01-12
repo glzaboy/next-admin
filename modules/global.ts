@@ -27,6 +27,7 @@ const initialState: GlobalState = {
   userInfo: {
     permissions: {},
   },
+  theme: "light",
 };
 // 创建带有命名空间的reducer
 const globalSlice = createSlice({

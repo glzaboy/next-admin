@@ -25,3 +25,16 @@ declare module "*.png" {
   const value: string;
   export default value;
 }
+
+declare module "@arco-design/color" {
+  export const generate = (
+    color: string,
+    options?: {
+      index?: number;
+      dark?: boolean;
+      list?: boolean;
+      format?: string;
+    }
+  ) => any;
+  export const getRgbStr = (color: string) => string;
+}

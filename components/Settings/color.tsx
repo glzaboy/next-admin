@@ -3,7 +3,7 @@ import { Trigger, Typography } from "@arco-design/web-react";
 import { SketchPicker } from "react-color";
 import { generate, getRgbStr } from "@arco-design/color";
 import { useAppSelector, useAppDispatch } from "@/modules/store";
-import { selectGlobal } from "@/modules/global";
+import { selectGlobal, updateSettings } from "@/modules/global";
 import useLocale from "@/utils/useLocale";
 import styles from "./style/color-panel.module.less";
 
@@ -15,8 +15,10 @@ function ColorPanel() {
   const { settings } = globalState;
   const locale = useLocale();
   const themeColor = settings?.themeColor;
-  const list = generate(themeColor, { list: true });
-
+  const list = generate(themeColor || "", {
+    list: true,
+    dark: theme === "dark",
+  });
   return (
     <div>
       <Trigger
@@ -27,15 +29,19 @@ function ColorPanel() {
             color={themeColor}
             onChangeComplete={(color) => {
               const newColor = color.hex;
-              dispatch({
-                type: "update-settings",
-                payload: { settings: { ...settings, themeColor: newColor } },
-              });
+              if (settings) {
+                dispatch(
+                  updateSettings({
+                    settings: { ...settings, themeColor: newColor },
+                  })
+                );
+              }
+
               const newList = generate(newColor, {
                 list: true,
                 dark: theme === "dark",
               });
-              newList.forEach((l, index) => {
+              newList.forEach((l: string, index: number) => {
                 const rgbStr = getRgbStr(l);
                 document.body.style.setProperty(
                   `--arcoblue-${index + 1}`,
@@ -55,7 +61,7 @@ function ColorPanel() {
         </div>
       </Trigger>
       <ul className={styles.ul}>
-        {list.map((item, index) => (
+        {list.map((item: string, index: number) => (
           <li
             key={index}
             className={styles.li}

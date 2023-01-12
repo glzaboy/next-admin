@@ -18,9 +18,10 @@ import {
 // import useLocale from '../../utils/useLocale';
 import MessageList, { MessageListType } from "./list";
 import styles from "./style/index.module.less";
+import useLocale from "@/utils/useLocale";
 
 function DropContent() {
-  // const t = useLocale();
+  const t = useLocale();
   const [loading, setLoading] = useState(false);
   const [groupData, setGroupData] = useState<{
     [key: string]: MessageListType;
@@ -132,7 +133,7 @@ function DropContent() {
   );
 }
 
-function MessageBox({ children }) {
+function MessageBox({ children }: any) {
   return (
     <Trigger
       trigger="hover"

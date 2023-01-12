@@ -1,6 +1,6 @@
 import { useAppSelector, useAppDispatch } from "@/modules/store";
 import { selectGlobal } from "@/modules/global";
-import React, { useState, ReactNode, useRef, useEffect } from "react";
+import React, { useState, ReactNode, useRef, useEffect, useMemo } from "react";
 import { Layout, Menu, Breadcrumb, Spin } from "@arco-design/web-react";
 import cs from "classnames";
 import {
@@ -26,6 +26,10 @@ import getUrlParams from "@/utils/getUrlParams";
 import styles from "@/styles/layout.module.less";
 import changeTheme from "@/utils/changeTheme";
 import NoAccess from "@/pages/exception/403";
+
+import { ConfigProvider } from "@arco-design/web-react";
+import zhCN from "@arco-design/web-react/es/locale/zh-CN";
+import enUS from "@arco-design/web-react/es/locale/en-US";
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -60,6 +64,17 @@ export const LayoutDefault = ({ children }: any) => {
   const globalState = useAppSelector(selectGlobal);
   const dispatch = useAppDispatch();
 
+  const l = useMemo(() => {
+    switch (globalState.lang) {
+      case "zh-CN":
+        return zhCN;
+      case "en-US":
+        return enUS;
+      default:
+        return zhCN;
+    }
+  }, [globalState.lang]);
+
   const urlParams = getUrlParams();
   const router = useRouter();
   const pathname = router.pathname;
@@ -67,7 +82,7 @@ export const LayoutDefault = ({ children }: any) => {
   const locale = useLocale();
   const { userInfo, settings, lang, theme } = globalState;
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const [routes, defaultRoute] = useRoute(userInfo?.permissions);
+  const [routes, defaultRoute] = useRoute(userInfo?.permissions || {});
 
   const defaultSelectedKeys = [currentComponent || defaultRoute];
   const paths = (currentComponent || defaultRoute).split("/");
@@ -104,12 +119,16 @@ export const LayoutDefault = ({ children }: any) => {
   useEffect(() => {
     document.cookie = `arco-lang=${lang}; path=/`;
     document.cookie = `arco-theme=${theme}; path=/`;
-    changeTheme(theme || "");
-  }, [lang, theme]);
+    changeTheme(theme || "", globalState.settings?.themeColor || "");
+  }, [lang, theme, globalState.settings?.themeColor]);
 
   function renderRoutes(locale: Record<string, string>) {
     routeMap.current.clear();
-    return function travel(_routes: IRoute[], level: number, parentNode = []) {
+    return function travel(
+      _routes: IRoute[],
+      level: number,
+      parentNode: Array<string> = []
+    ) {
       return _routes.map((route) => {
         const { breadcrumb = true, ignore } = route;
         const iconDom = getIconFromKey(route.key);
@@ -188,66 +207,86 @@ export const LayoutDefault = ({ children }: any) => {
 
   return (
     <>
-      <Layout className={styles.layout}>
-        <div
-          className={cs(styles["layout-navbar"], {
-            [styles["layout-navbar-hidden"]]: !showNavbar,
-          })}
-        >
-          <Navbar show={!!showNavbar} />
-        </div>
-        <Layout>
-          {showMenu && (
-            <Sider
-              className={styles["layout-sider"]}
-              width={menuWidth}
-              collapsed={collapsed}
-              onCollapse={setCollapsed}
-              trigger={null}
-              collapsible
-              breakpoint="xl"
-              style={paddingTop}
-            >
-              <div className={styles["menu-wrapper"]}>
-                <Menu
-                  collapse={collapsed}
-                  onClickMenuItem={onClickMenuItem}
-                  selectedKeys={selectedKeys}
-                  openKeys={openKeys}
-                  onClickSubMenu={(_, openKeys) => {
-                    setOpenKeys(openKeys);
-                  }}
-                >
-                  {renderRoutes(locale)(routes, 1)}
-                </Menu>
-              </div>
-              <div className={styles["collapse-btn"]} onClick={toggleCollapse}>
-                {collapsed ? <IconMenuUnfold /> : <IconMenuFold />}
-              </div>
-            </Sider>
-          )}
-          <Layout className={styles["layout-content"]} style={paddingStyle}>
-            <div className={styles["layout-content-wrapper"]}>
-              {!!breadcrumb.length && (
-                <div className={styles["layout-breadcrumb"]}>
-                  <Breadcrumb>
-                    {breadcrumb.map((node, index) => (
-                      <Breadcrumb.Item key={index}>
-                        {typeof node === "string" ? locale[node] || node : node}
-                      </Breadcrumb.Item>
-                    ))}
-                  </Breadcrumb>
+      <ConfigProvider
+        locale={l}
+        componentConfig={{
+          Card: {
+            bordered: false,
+          },
+          List: {
+            bordered: false,
+          },
+          Table: {
+            border: false,
+          },
+        }}
+      >
+        <Layout className={styles.layout}>
+          <div
+            className={cs(styles["layout-navbar"], {
+              [styles["layout-navbar-hidden"]]: !showNavbar,
+            })}
+          >
+            <Navbar show={!!showNavbar} />
+          </div>
+          <Layout>
+            {showMenu && (
+              <Sider
+                className={styles["layout-sider"]}
+                width={menuWidth}
+                collapsed={collapsed}
+                onCollapse={setCollapsed}
+                trigger={null}
+                collapsible
+                breakpoint="xl"
+                style={paddingTop}
+              >
+                <div className={styles["menu-wrapper"]}>
+                  <Menu
+                    collapse={collapsed}
+                    onClickMenuItem={onClickMenuItem}
+                    selectedKeys={selectedKeys}
+                    openKeys={openKeys}
+                    onClickSubMenu={(_, openKeys) => {
+                      setOpenKeys(openKeys);
+                    }}
+                  >
+                    {renderRoutes(locale)(routes, 1)}
+                  </Menu>
                 </div>
-              )}
-              <Content>
-                {routeMap.current.has(pathname) ? children : <NoAccess />}
-                {/* {children} */}
-              </Content>
-            </div>
-            {showFooter && <Footer />}
+                <div
+                  className={styles["collapse-btn"]}
+                  onClick={toggleCollapse}
+                >
+                  {collapsed ? <IconMenuUnfold /> : <IconMenuFold />}
+                </div>
+              </Sider>
+            )}
+            <Layout className={styles["layout-content"]} style={paddingStyle}>
+              <div className={styles["layout-content-wrapper"]}>
+                {!!breadcrumb.length && (
+                  <div className={styles["layout-breadcrumb"]}>
+                    <Breadcrumb>
+                      {breadcrumb.map((node, index) => (
+                        <Breadcrumb.Item key={index}>
+                          {typeof node === "string"
+                            ? locale[node] || node
+                            : node}
+                        </Breadcrumb.Item>
+                      ))}
+                    </Breadcrumb>
+                  </div>
+                )}
+                <Content>
+                  {/* {routeMap.current.has(pathname) ? children : <NoAccess />} */}
+                  {children}
+                </Content>
+              </div>
+              {showFooter && <Footer />}
+            </Layout>
           </Layout>
         </Layout>
-      </Layout>
+      </ConfigProvider>
     </>
   );
 };

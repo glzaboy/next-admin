@@ -31,8 +31,8 @@ import {
   setTheme,
   updateUserInfo,
 } from "@/modules/global";
-// import Logo from "@/assets/logo.svg";
-// import MessageBox from "../MessageBox";
+import Logo from "@/public/assets/logo.svg";
+import MessageBox from "../MessageBox";
 import IconButton from "./IconButton";
 import Settings from "../Settings";
 import styles from "./style/index.module.less";
@@ -69,7 +69,7 @@ function Navbar({ show }: { show: boolean }) {
       updateUserInfo({
         userInfo: {
           ...userInfo,
-          permissions: generatePermission(role),
+          permissions: generatePermission(role || ""),
         },
       })
     );
@@ -148,7 +148,7 @@ function Navbar({ show }: { show: boolean }) {
     <div className={styles.navbar}>
       <div className={styles.left}>
         <div className={styles.logo}>
-          {/* <Logo /> */}
+          <Logo />
           <div className={styles["logo-name"]}>Arco Pro</div>
         </div>
       </div>
@@ -173,18 +173,18 @@ function Navbar({ show }: { show: boolean }) {
               position: "br",
             }}
             trigger="hover"
-            onChange={(value) => {
+            onChange={(value: "zh-CN" | "en-US") => {
               dispatch(setLang({ lang: value }));
               const nextLang = defaultLocale[value];
               Message.info(`${nextLang["message.lang.tips"]}${value}`);
             }}
           />
         </li>
-        {/* <li>
+        <li>
           <MessageBox>
             <IconButton icon={<IconNotification />} />
           </MessageBox>
-        </li> */}
+        </li>
         <li>
           <Tooltip
             content={

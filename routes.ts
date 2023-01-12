@@ -18,10 +18,6 @@ export const routes: IRoute[] = [
     children: [
       {
         name: "menu.dashboard.workplace",
-        key: "/",
-      },
-      {
-        name: "menu.dashboard.workplace",
         key: "dashboard/workplace",
       },
       {
@@ -169,7 +165,7 @@ export const getName = (path: string, routes: IRoute[]): IRoute | undefined => {
 
 export const generatePermission = (role: string) => {
   const actions = role === "admin" ? ["*"] : ["read"];
-  const result = {};
+  const result: any = {};
   routes.forEach((item) => {
     if (item.children) {
       item.children.forEach((child) => {
@@ -180,8 +176,10 @@ export const generatePermission = (role: string) => {
   return result;
 };
 
-const useRoute = (userPermission): [IRoute[], string] => {
-  const filterRoute = (routes: IRoute[], arr = []): IRoute[] => {
+const useRoute = (
+  userPermission: Record<string, string[]>
+): [IRoute[], string] => {
+  const filterRoute = (routes: IRoute[], arr: any = []): IRoute[] => {
     if (!routes.length) {
       return [];
     }

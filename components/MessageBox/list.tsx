@@ -88,7 +88,8 @@ function MessageList(props: MessageListProps) {
               avatar={
                 item.avatar && (
                   <Avatar shape="circle" size={36}>
-                    <img src={item.avatar} />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={item.avatar} alt="" />
                   </Avatar>
                 )
               }

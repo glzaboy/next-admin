@@ -1,6 +1,6 @@
 import defaultLocale from "@/locale";
 import { selectGlobal } from "@/modules/global";
-import { useAppSelector, useAppDispatch } from "../modules/store";
+import { useAppSelector, useAppDispatch } from "@/modules/store";
 
 function useLocale(locale: any = null): Record<string, string> {
   const globalState = useAppSelector(selectGlobal);
