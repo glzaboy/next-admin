@@ -15,68 +15,49 @@ import { IconLock, IconUser } from "@arco-design/web-react/icon";
 
 import styles from "./style/index.module.less";
 import useLocale from "@/utils/useLocale";
-import { FormInstance } from "@arco-design/web-react/es/Form";
 import useStorage from "@/utils/useStorage";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import type { Data } from "@/pages/api/hello";
+import type { Data } from "@/pages/api/login";
 import { request } from "@/utils/request";
-import useSWR, { mutate } from "swr";
 import { LayoutNoMemu } from "@/components/Layout";
 
-export default function Home({
-  data,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Home() {
   const t = useLocale(locale);
   const globalState = useAppSelector(selectGlobal);
   useEffect(() => {
     document.body.setAttribute("arco-theme", "light");
   }, []);
-  const formRef = useRef<FormInstance<Data>>();
+  // const formRef = useRef<FormInstance<Data>>();
+  const [form] = Form.useForm();
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [loginParams, setLoginParams, removeLoginParams] =
     useStorage("loginParams");
-  const {
-    data: s,
-    error: er,
-    mutate: apiM,
-  } = useSWR(
-    { url: "/api/hello", params: { a: "b" } },
-    (input: { url: string; params: Record<string, string> }) =>
-      request<Data>(input.url, { method: "post", data: input.params }),
-    { refreshInterval: 1000 }
-  );
 
   const [rememberPassword, setRememberPassword] = useState(!!loginParams);
-  // const login = (params: Record<string, string>) => {
-  //   setErrorMessage("");
-  //   setLoading(true);
-
-  //   console.log(error);
-  //   // axios
-  //   //   .post("/api/user/login", params)
-  //   //   .then((res) => {
-  //   //     const { status, msg } = res.data;
-  //   //     if (status === "ok") {
-  //   //       afterLoginSuccess(params);
-  //   //     } else {
-  //   //       setErrorMessage(msg || t["login.form.login.errMsg"]);
-  //   //     }
-  //   //   })
-  //   //   .finally(() => {
-  //   //     setLoading(false);
-  //   //   });
-  // };
+  const login = (params: Record<string, string>) => {
+    setErrorMessage("");
+    setLoading(true);
+    request<Data>("/api/login", { method: "post", data: params })
+      .then((res) => {
+        const { status, msg } = res;
+        res.status;
+        if (status === "ok") {
+          afterLoginSuccess(params);
+        } else {
+          setErrorMessage(msg || t["login.form.login.errMsg"]);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   function onSubmitClick() {
-    // formRef.current.validate().then((values) => {
-    //   apiM(values);
-    // });
-    // formRef.current.validate().then((values) => {
-    //   login(values);
-    // });
+    form.validate().then((values) => {
+      login(values);
+    });
   }
-  function afterLoginSuccess(params) {
+  function afterLoginSuccess(params: Record<string, string>) {
     // 记住密码
     if (rememberPassword) {
       setLoginParams(JSON.stringify(params));
@@ -97,8 +78,8 @@ export default function Home({
           href="https://unpkg.byted-static.com/latest/byted/arco-config/assets/favicon.ico"
         />
       </Head>
-      {er && <div>{er}</div>}
-      {s && <div>{s.name}</div>}
+      {/* {er && <div>{er}</div>}
+      {s && <div>{s.name}</div>} */}
       <div className={styles["login-form-wrapper"]}>
         <div className={styles["login-form-title"]}>
           {t["login.form.title"]}
@@ -110,9 +91,22 @@ export default function Home({
         <Form
           className={styles["login-form"]}
           layout="vertical"
-          ref={formRef}
-          initialValues={{ userName: "admin", password: "admin" }}
+          // ref={formRef}
+          form={form}
+          initialValues={{
+            userName: "glzaboy",
+            password: "admin888",
+            loginType: "PASSWORD",
+          }}
         >
+          <Form.Item
+            field="loginType"
+            rules={[
+              { required: true, message: t["login.form.userName.errMsg"] },
+            ]}
+          >
+            <Input onPressEnter={onSubmitClick} />
+          </Form.Item>
           <Form.Item
             field="userName"
             rules={[
@@ -168,10 +162,4 @@ export default function Home({
     </>
   );
 }
-// export const getServerSideProps: GetServerSideProps<{
-//   data: Data;
-// }> = async (context) => {
-//   const a: Data = await request<Data>("http://localhost:3000/api/hello", {});
-//   return { props: { data: a } };
-// };
 Home.Layout = LayoutNoMemu;

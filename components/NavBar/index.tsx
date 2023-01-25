@@ -40,6 +40,7 @@ import defaultLocale from "@/locale";
 import useStorage from "@/utils/useStorage";
 import useLocale from "@/utils/useLocale";
 import { generatePermission } from "@/routes";
+import { request } from "@/utils/request";
 
 function Navbar({ show }: { show: boolean }) {
   const globalState = useAppSelector(selectGlobal);
@@ -52,6 +53,7 @@ function Navbar({ show }: { show: boolean }) {
   const [role, setRole] = useStorage("userRole", "admin");
 
   function logout() {
+    request("/api/logout");
     setUserStatus("logout");
     window.location.href = "/login";
   }
