@@ -40,7 +40,8 @@ import defaultLocale from "@/locale";
 import useStorage from "@/utils/useStorage";
 import useLocale from "@/utils/useLocale";
 import { generatePermission } from "@/routes";
-import { request } from "@/utils/request";
+import { requestMsg } from "@/utils/request";
+import { apiResponse } from "@/server/dto/baseResponse";
 
 function Navbar({ show }: { show: boolean }) {
   const globalState = useAppSelector(selectGlobal);
@@ -53,9 +54,10 @@ function Navbar({ show }: { show: boolean }) {
   const [role, setRole] = useStorage("userRole", "admin");
 
   function logout() {
-    request("/api/logout");
-    setUserStatus("logout");
-    window.location.href = "/login";
+    requestMsg<apiResponse>("/api/logout").then((res) => {
+      setUserStatus("logout");
+      window.location.href = "/login";
+    });
   }
 
   function onMenuItemClick(key: string) {

@@ -16,9 +16,9 @@ import { IconLock, IconUser } from "@arco-design/web-react/icon";
 import styles from "./style/index.module.less";
 import useLocale from "@/utils/useLocale";
 import useStorage from "@/utils/useStorage";
-import type { Data } from "@/pages/api/login";
-import { request } from "@/utils/request";
+import { requestMsg } from "@/utils/request";
 import { LayoutNoMemu } from "@/components/Layout";
+import { apiResponse } from "@/server/dto/baseResponse";
 
 export default function Home() {
   const t = useLocale(locale);
@@ -37,15 +37,12 @@ export default function Home() {
   const login = (params: Record<string, string>) => {
     setErrorMessage("");
     setLoading(true);
-    request<Data>("/api/login", { method: "post", data: params })
+    requestMsg<apiResponse>("/api/login", { method: "post", data: params })
       .then((res) => {
-        const { status, msg } = res;
-        res.status;
-        if (status === "ok") {
-          afterLoginSuccess(params);
-        } else {
-          setErrorMessage(msg || t["login.form.login.errMsg"]);
-        }
+        afterLoginSuccess(params);
+      })
+      .catch((err) => {
+        setErrorMessage(err || t["login.form.login.errMsg"]);
       })
       .finally(() => {
         setLoading(false);
@@ -78,8 +75,6 @@ export default function Home() {
           href="https://unpkg.byted-static.com/latest/byted/arco-config/assets/favicon.ico"
         />
       </Head>
-      {/* {er && <div>{er}</div>}
-      {s && <div>{s.name}</div>} */}
       <div className={styles["login-form-wrapper"]}>
         <div className={styles["login-form-title"]}>
           {t["login.form.title"]}
