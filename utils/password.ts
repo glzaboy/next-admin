@@ -39,7 +39,6 @@ export const encodePassword = (password: string): string => {
   var times: number = Math.floor(Math.random() * (max - min) + min);
   var tmpPasswd = password;
   for (var i = 0; i < times; i++) {
-    console.log(i);
     tmpPasswd = md5(salt + tmpPasswd);
   }
   return `$md5\$${times}\$${salt}\$${tmpPasswd}`;
@@ -65,7 +64,6 @@ export const validPassword = (
   const salt = passwordSplit[3];
   var tmpPasswd = password;
   for (var i = 0; i < times; i++) {
-    console.log(i);
     tmpPasswd = md5(salt + tmpPasswd);
   }
   return tmpPasswd === passwordSplit[4];

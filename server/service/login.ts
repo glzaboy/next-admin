@@ -25,7 +25,6 @@ const loginPassword = async (input: LoginParament): Promise<User | null> => {
   if (!login) {
     throw new Error("登录失败");
   }
-  console.log(login.accessPwd);
   if (validPassword(input.password || "", login.accessPwd || "")) {
     return await getUser(login.userId);
   }
@@ -73,7 +72,6 @@ export const getLoginUser = (
   ret.login = false;
   ret.user = { id: -1, name: "guest", avatar: "" };
   if (_res && !!!ret.login) {
-    console.log(111);
     _res.redirect("/login");
   }
   return ret;

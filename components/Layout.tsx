@@ -1,5 +1,5 @@
 import { useAppSelector, useAppDispatch } from "@/modules/store";
-import { selectGlobal } from "@/modules/global";
+import { selectGlobal, updateUserInfo } from "@/modules/global";
 import React, { useState, ReactNode, useRef, useEffect, useMemo } from "react";
 import { Layout, Menu, Breadcrumb, Spin } from "@arco-design/web-react";
 import cs from "classnames";
@@ -30,6 +30,8 @@ import NoAccess from "@/pages/exception/403";
 import { ConfigProvider } from "@arco-design/web-react";
 import zhCN from "@arco-design/web-react/es/locale/zh-CN";
 import enUS from "@arco-design/web-react/es/locale/en-US";
+import { request } from "@/utils/request";
+import { loginCheckResult } from "@/server/service/login";
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -122,6 +124,24 @@ export const LayoutDefault = ({ children }: any) => {
     changeTheme(theme || "", globalState.settings?.themeColor || "");
   }, [lang, theme, globalState.settings?.themeColor]);
 
+  useEffect(() => {
+    request<loginCheckResult>("/api/getUser")
+      .then((data) => {
+        dispatch(
+          updateUserInfo({
+            userInfo: {
+              name: data.user?.name || "",
+              permissions: {},
+              avatar: data.user?.avatar || "",
+            },
+          })
+        );
+      })
+      .catch((e) => {
+        window.location.href = "/login";
+      });
+  }, [globalState.userInfo, dispatch]);
+
   function renderRoutes(locale: Record<string, string>) {
     routeMap.current.clear();
     return function travel(
@@ -203,7 +223,7 @@ export const LayoutDefault = ({ children }: any) => {
     const routeConfig = routeMap.current.get(pathname);
     setBreadCrumb(routeConfig || []);
     updateMenuStatus();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   return (

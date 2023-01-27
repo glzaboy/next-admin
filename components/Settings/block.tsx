@@ -28,7 +28,6 @@ export default function Block(props: BlockProps) {
   const { title, options, children } = props;
   const locale = useLocale();
   const { settings: setting } = globalState;
-  console.log(setting);
 
   return (
     <div className={styles.block}>

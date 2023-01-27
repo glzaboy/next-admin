@@ -70,7 +70,6 @@ const request: IRequest = (url: string, opts: any = { method: "GET" }) => {
       .then((res) => {
         const data = res.data;
         if (data.code != 0) {
-          Message.error("请求出错" + data.msg);
           reject("请求出错:" + data.msg);
         }
         resolve(res.data);
