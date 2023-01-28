@@ -17,6 +17,7 @@ export interface GlobalState {
     email?: string;
     permissions: Record<string, string[]>;
   };
+  userDate?: Date;
   userLoading?: boolean;
   lang?: "zh-CN" | "en-US";
   theme?: string;
@@ -51,13 +52,21 @@ const globalSlice = createSlice({
       const { theme } = action.payload;
       state.theme = theme;
     },
+    updateUserReq: (state) => {
+      state.userDate = new Date();
+    },
   },
   extraReducers: () => {},
 });
 
 export const selectGlobal = (state: RootState) => state.global;
 
-export const { updateSettings, updateUserInfo, setLang, setTheme } =
-  globalSlice.actions;
+export const {
+  updateSettings,
+  updateUserInfo,
+  setLang,
+  setTheme,
+  updateUserReq,
+} = globalSlice.actions;
 
 export default globalSlice.reducer;

@@ -30,6 +30,7 @@ import {
   setLang,
   setTheme,
   updateUserInfo,
+  updateUserReq,
 } from "@/modules/global";
 import Logo from "@/public/assets/logo.svg";
 import MessageBox from "../MessageBox";
@@ -50,13 +51,11 @@ function Navbar({ show }: { show: boolean }) {
   const t = useLocale();
   const { userInfo, userLoading, lang, theme } = globalState;
 
-  const [_, setUserStatus] = useStorage("userStatus");
   const [role, setRole] = useStorage("userRole", "admin");
 
   function logout() {
     requestMsg<apiResponse>("/api/logout").then((res) => {
-      setUserStatus("logout");
-      window.location.href = "/login";
+      dispatch(updateUserReq());
     });
   }
 
@@ -184,11 +183,13 @@ function Navbar({ show }: { show: boolean }) {
             }}
           />
         </li>
-        <li>
-          <MessageBox>
-            <IconButton icon={<IconNotification />} />
-          </MessageBox>
-        </li>
+        {userInfo?.name && (
+          <li>
+            <MessageBox>
+              <IconButton icon={<IconNotification />} />
+            </MessageBox>
+          </li>
+        )}
         <li>
           <Tooltip
             content={
@@ -208,7 +209,7 @@ function Navbar({ show }: { show: boolean }) {
           </Tooltip>
         </li>
         <Settings />
-        {userInfo && (
+        {userInfo?.name && (
           <li>
             <Dropdown droplist={droplist} position="br" disabled={userLoading}>
               <Avatar size={32} style={{ cursor: "pointer" }}>

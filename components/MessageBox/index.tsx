@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import groupBy from "lodash/groupBy";
 import {
   Trigger,
@@ -15,10 +14,10 @@ import {
   IconFile,
   IconDesktop,
 } from "@arco-design/web-react/icon";
-// import useLocale from '../../utils/useLocale';
 import MessageList, { MessageListType } from "./list";
 import styles from "./style/index.module.less";
 import useLocale from "@/utils/useLocale";
+import { requestMsg } from "@/utils/request";
 
 function DropContent() {
   const t = useLocale();
@@ -30,10 +29,9 @@ function DropContent() {
 
   function fetchSourceData(showLoading = true) {
     showLoading && setLoading(true);
-    axios
-      .get("/api/message/list")
+    requestMsg<MessageListType>("/api/message/list")
       .then((res) => {
-        setSourceData(res.data);
+        setSourceData(res);
       })
       .finally(() => {
         showLoading && setLoading(false);
@@ -42,13 +40,14 @@ function DropContent() {
 
   function readMessage(data: MessageListType) {
     const ids = data.map((item) => item.id);
-    axios
-      .post("/api/message/read", {
-        ids,
-      })
-      .then(() => {
+    requestMsg<MessageListType>("/api/message/read", {
+      method: "post",
+      data: { ids },
+    })
+      .then((res) => {
         fetchSourceData();
-      });
+      })
+      .finally(() => {});
   }
 
   useEffect(() => {
@@ -139,7 +138,7 @@ function MessageBox({ children }: any) {
       trigger="hover"
       popup={() => <DropContent />}
       position="br"
-      unmountOnExit={false}
+      unmountOnExit={true}
       popupAlign={{ bottom: 4 }}
     >
       <Badge count={9} dot>

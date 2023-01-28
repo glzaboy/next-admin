@@ -7,12 +7,16 @@ import useLocale from "@/utils/useLocale";
 import { LayoutNoMemu } from "@/components/Layout";
 import LoginForm from "./form";
 import { Grid } from "@arco-design/web-react";
+import { useTimeOut } from "@/utils/useCountDown";
 
 export default function Home() {
   const t = useLocale(locale);
   useEffect(() => {
     document.body.setAttribute("arco-theme", "light");
   }, []);
+  useTimeOut(10, () => {
+    console.log(new Date());
+  });
   return (
     <>
       <Head>

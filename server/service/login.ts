@@ -1,4 +1,4 @@
-import type { Login, LoginType, User } from "@prisma/client";
+import { Login, LoginType, User } from "@prisma/client";
 import prisma from "../prisma";
 import { encodePassword, validPassword, verifyJwt } from "@/utils/password";
 export type LoginParament = {
@@ -10,12 +10,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type { NextRequest } from "next/server";
 import type { apiResponse } from "@/server/dto/baseResponse";
 export const login = (input: LoginParament) => {
-  // switch(input.loginType){
-  //     case:LoginType.PASSWORD
-  return loginPassword(input);
-  //     break;
-
-  // }
+  if (input.loginType == LoginType.PASSWORD) {
+    return loginPassword(input);
+  }
 };
 
 const loginPassword = async (input: LoginParament): Promise<User | null> => {

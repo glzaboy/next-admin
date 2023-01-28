@@ -140,7 +140,7 @@ export const LayoutDefault = ({ children }: any) => {
       .catch((e) => {
         window.location.href = "/login";
       });
-  }, [globalState.userInfo, dispatch]);
+  }, [globalState.userDate, dispatch]);
 
   function renderRoutes(locale: Record<string, string>) {
     routeMap.current.clear();

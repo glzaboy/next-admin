@@ -27,6 +27,7 @@ export default async function handler(
       res.status(200).json({ code: 0, msg: "" });
     })
     .catch((error) => {
+      console.error(error);
       res.status(200).json({ code: -1, msg: "登录失败" });
     });
 }
