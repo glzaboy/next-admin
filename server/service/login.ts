@@ -1,18 +1,19 @@
 import { Login, LoginType, User } from "@prisma/client";
 import prisma from "../prisma";
-import { encodePassword, validPassword, verifyJwt } from "@/utils/password";
+import { validPassword, verifyJwt } from "@/utils/password";
 export type LoginParament = {
   user: string;
   password?: string;
   loginType: LoginType;
 };
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { NextRequest } from "next/server";
 import type { apiResponse } from "@/server/dto/baseResponse";
-export const login = (input: LoginParament) => {
+export const login = (input: LoginParament): Promise<User | null> => {
+  console.log(input);
   if (input.loginType == LoginType.PASSWORD) {
     return loginPassword(input);
   }
+  return Promise.reject("不支持的登录");
 };
 
 const loginPassword = async (input: LoginParament): Promise<User | null> => {

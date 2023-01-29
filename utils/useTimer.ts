@@ -1,28 +1,90 @@
 import { useEffect, useRef, useState } from "react";
 
-export const useTimeOut = (time: number, fn: () => void) => {
-  const [timeOut, setTime] = useState(time);
+/**
+ * 定时回调
+ * @param timeOut 超时时间 单位秒
+ * @param fn 回调方法
+ */
+export const useTimeOut = (timeOut: number, fn: () => void) => {
+  const timer = useRef<NodeJS.Timeout>();
   useEffect(() => {
-    const timer = window.setTimeout(() => {
+    timer.current = setTimeout(() => {
       fn();
     }, timeOut * 1000);
     return () => {
-      console.log("time destory");
-      clearTimeout(timer);
+      console.log("tick timer destroy");
+      clearTimeout(timer.current);
     };
-  }, [timeOut]);
+  }, []);
 };
-export const useTimeInterVal = (time: number, fn: () => void) => {
-  const [timeOut, setTime] = useState(time);
+/**
+ * 周期性回调
+ * @param timeInterVal 定时时间
+ * @param fn 回调
+ */
+export const useTimeInterVal = (timeInterVal: number, fn: () => void) => {
+  const timer = useRef<NodeJS.Timeout>();
+
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      fn();
-    }, 1000);
+    console.log("use Effect start", timer);
+    startTimer(timeInterVal, fn);
+    console.log("use Effect startID", timer);
     return () => {
-      console.log("time destory");
-      clearInterval(timer);
+      stopTimer();
     };
-  }, [timeOut]);
+  }, []);
+  const stopTimer = () => {
+    if (timer) {
+      clearInterval(timer.current);
+      timer.current = undefined;
+      console.log("clear Timer Id", timer);
+    }
+    return undefined;
+  };
+  const startTimer = (timeInterVal: number, fn: () => void) => {
+    console.log("startTimer", timer);
+    if (timer.current) {
+      console.error("timer already running.");
+    } else {
+      timer.current = setInterval(() => {
+        fn();
+      }, timeInterVal * 1000);
+    }
+  };
+
+  return { startTimer, stopTimer };
 };
 
-// export default useCountDown;
+/**
+ * countDown
+ * @param duration 时间秒
+ * @returns
+ */
+export const useCountdown = (duration: number) => {
+  const [countdown, setCountdown] = useState(0);
+  const [isSetup, toggleSetup] = useState(false);
+  const timer = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    if (isSetup) {
+      setCountdown(duration);
+      timer.current = setInterval(() => {
+        setCountdown((current) => current - 1);
+      }, 1000);
+    } else clearInterval(timer.current as NodeJS.Timeout);
+  }, [isSetup]);
+
+  useEffect(() => {
+    if (countdown === 0) {
+      toggleSetup(false);
+    }
+  }, [countdown]);
+
+  useEffect(() => () => clearInterval(timer.current as NodeJS.Timeout), []);
+
+  function setupCountdown() {
+    toggleSetup(true);
+  }
+
+  return { countdown, setupCountdown };
+};

@@ -32,6 +32,7 @@ import zhCN from "@arco-design/web-react/es/locale/zh-CN";
 import enUS from "@arco-design/web-react/es/locale/en-US";
 import { request } from "@/utils/request";
 import { loginCheckResult } from "@/server/service/login";
+import { useTimeInterVal } from "@/utils/useTimer";
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -123,6 +124,23 @@ export const LayoutDefault = ({ children }: any) => {
     document.cookie = `arco-theme=${theme}; path=/`;
     changeTheme(theme || "", globalState.settings?.themeColor || "");
   }, [lang, theme, globalState.settings?.themeColor]);
+  useTimeInterVal(180, () => {
+    request<loginCheckResult>("/api/getUser")
+      .then((data) => {
+        dispatch(
+          updateUserInfo({
+            userInfo: {
+              name: data.user?.name || "",
+              permissions: {},
+              avatar: data.user?.avatar || "",
+            },
+          })
+        );
+      })
+      .catch((e) => {
+        window.location.href = "/login";
+      });
+  });
 
   useEffect(() => {
     request<loginCheckResult>("/api/getUser")
@@ -347,6 +365,41 @@ export const LayoutNoMemu = ({ children }: any) => {
     document.cookie = `arco-theme=${theme}; path=/`;
     changeTheme(theme || "", globalState.settings?.themeColor || "");
   }, [lang, theme, globalState.settings?.themeColor]);
+  useTimeInterVal(180, () => {
+    request<loginCheckResult>("/api/getUser")
+      .then((data) => {
+        dispatch(
+          updateUserInfo({
+            userInfo: {
+              name: data.user?.name || "",
+              permissions: {},
+              avatar: data.user?.avatar || "",
+            },
+          })
+        );
+      })
+      .catch((e) => {
+        // window.location.href = "/login";
+      });
+  });
+
+  useEffect(() => {
+    request<loginCheckResult>("/api/getUser")
+      .then((data) => {
+        dispatch(
+          updateUserInfo({
+            userInfo: {
+              name: data.user?.name || "",
+              permissions: {},
+              avatar: data.user?.avatar || "",
+            },
+          })
+        );
+      })
+      .catch((e) => {
+        // window.location.href = "/login";
+      });
+  }, [globalState.userDate, dispatch]);
 
   return (
     <>

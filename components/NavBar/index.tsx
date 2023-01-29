@@ -208,7 +208,7 @@ function Navbar({ show }: { show: boolean }) {
             />
           </Tooltip>
         </li>
-        <Settings />
+        {userInfo?.name && <Settings />}
         {userInfo?.name && (
           <li>
             <Dropdown droplist={droplist} position="br" disabled={userLoading}>

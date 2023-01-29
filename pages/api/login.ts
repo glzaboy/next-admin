@@ -10,8 +10,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<apiResponse>
 ) {
-  const { loginType, userName, password } = req.body;
-  const loginP: LoginParament = { user: userName, loginType, password };
+  const { type, userName, password } = req.body;
+  const loginP: LoginParament = { user: userName, loginType: type, password };
   login(loginP)
     .then((loginUser) => {
       setCookie(
@@ -26,8 +26,8 @@ export default async function handler(
       );
       res.status(200).json({ code: 0, msg: "" });
     })
-    .catch((error) => {
+    .catch((error: Error) => {
       console.error(error);
-      res.status(200).json({ code: -1, msg: "登录失败" });
+      res.status(200).json({ code: -1, msg: "失败" + error.message });
     });
 }

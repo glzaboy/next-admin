@@ -6,7 +6,6 @@ import {
   Button,
   Space,
 } from "@arco-design/web-react";
-import { FormInstance } from "@arco-design/web-react/es/Form";
 import { IconLock, IconUser } from "@arco-design/web-react/icon";
 import React, { useEffect, useState } from "react";
 import useStorage from "@/utils/useStorage";
@@ -15,6 +14,7 @@ import locale from "@/locale/login";
 import styles from "./style/index.module.less";
 import { requestMsg } from "@/utils/request";
 import { apiResponse } from "@/server/dto/baseResponse";
+import { useCountdown } from "@/utils/useTimer";
 
 export default function LoginForm() {
   const [form] = Form.useForm();
@@ -26,6 +26,7 @@ export default function LoginForm() {
   const t = useLocale(locale);
 
   const [rememberPassword, setRememberPassword] = useState<boolean>(false);
+  const { countdown, setupCountdown } = useCountdown(15);
   function afterLoginSuccess(params: Record<string, string>) {
     // 记住密码
     if (rememberPassword) {
@@ -33,8 +34,6 @@ export default function LoginForm() {
     } else {
       removeLoginParams();
     }
-    // 记录登录状态
-    localStorage.setItem("userStatus", "login");
     // 跳转首页
     window.location.href = "/";
   }
@@ -55,6 +54,7 @@ export default function LoginForm() {
 
   function onSubmitClick() {
     form.validate().then((values) => {
+      setupCountdown();
       login(values);
     });
   }
@@ -122,8 +122,14 @@ export default function LoginForm() {
             </Checkbox>
             <Link>{t["login.form.forgetPassword"]}</Link>
           </div>
-          <Button type="primary" long onClick={onSubmitClick} loading={loading}>
-            {t["login.form.login"]}
+          <Button
+            type="primary"
+            long
+            onClick={onSubmitClick}
+            loading={loading || countdown > 0}
+          >
+            {t["login.form.login"] +
+              (countdown <= 0 ? "" : "(" + countdown + ")")}
           </Button>
           <Button
             type="text"
