@@ -59,12 +59,18 @@ export const getLoginUser = (
   var ret: loginCheckResult = { login: false, user: null };
   const cookieStr = req.cookies["auth"] ?? "";
   if (cookieStr != null && cookieStr != undefined && cookieStr.length > 0) {
-    const verify: any = verifyJwt(cookieStr);
-    if (verify) {
-      ret.login = true;
-      ret.code = 0;
-      ret.user = { ...verify };
-      return ret;
+    try {
+      const verify: any = verifyJwt(cookieStr);
+      if (verify) {
+        ret.login = true;
+        ret.code = 0;
+        ret.user = { ...verify };
+        return ret;
+      }
+    } catch (err) {
+      console.error(err);
+      ret.login = false;
+      ret.user = { id: -1, name: "guest", avatar: "" };
     }
   }
   ret.login = false;

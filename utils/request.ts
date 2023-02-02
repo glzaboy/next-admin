@@ -68,6 +68,7 @@ const request: IRequest = (url: string, opts: any = { method: "GET" }) => {
     requestInstance
       .request({ ...opts, url })
       .then((res) => {
+        console.log(res);
         const data = res.data;
         if (data.code != 0) {
           reject("请求出错:" + data.msg);

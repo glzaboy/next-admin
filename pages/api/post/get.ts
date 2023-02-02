@@ -1,0 +1,35 @@
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { apiResponse } from "@/server/dto/baseResponse";
+import prisma from "@/server/prisma";
+import getUrlParams from "@/utils/getUrlParams";
+import type { NextApiRequest, NextApiResponse } from "next";
+
+export type Data = {
+  title?: string;
+  content?: string;
+} & apiResponse;
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  // Prisma.Post;
+  const { id } = req.query;
+  if (typeof id == "string") {
+    const post = await prisma.post.findUnique({
+      where: { id: parseInt(id) },
+      select: { title: true, PostContent: { select: { content: true } } },
+    });
+    if (post) {
+      res.status(200).json({
+        title: post?.title,
+        content: post?.PostContent.content,
+        code: 0,
+      });
+    } else {
+      res.status(404).send({ code: -1, msg: "error" });
+    }
+  } else {
+    res.status(404).send({ code: -1, msg: "error" });
+  }
+}

@@ -317,8 +317,7 @@ export const LayoutDefault = ({ children }: any) => {
                   </div>
                 )}
                 <Content>
-                  {/* {routeMap.current.has(pathname) ? children : <NoAccess />} */}
-                  {children}
+                  {routeMap.current.has(pathname) ? children : <NoAccess />}
                 </Content>
               </div>
               {showFooter && <Footer />}
