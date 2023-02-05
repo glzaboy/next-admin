@@ -43,6 +43,7 @@ import useLocale from "@/utils/useLocale";
 import { generatePermission } from "@/routes";
 import { requestMsg } from "@/utils/request";
 import { apiResponse } from "@/server/dto/baseResponse";
+import Link from "next/link";
 
 function Navbar({ show }: { show: boolean }) {
   const globalState = useAppSelector(selectGlobal);
@@ -151,7 +152,9 @@ function Navbar({ show }: { show: boolean }) {
     <div className={styles.navbar}>
       <div className={styles.left}>
         <div className={styles.logo}>
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
           <div className={styles["logo-name"]}>Arco Pro</div>
         </div>
       </div>

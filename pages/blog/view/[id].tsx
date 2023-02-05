@@ -24,7 +24,9 @@ export default function Index({
         <title>{data?.title}</title>
       </Head>
       <Typography.Title>{data?.title}</Typography.Title>
-      <Typography.Paragraph>{data?.content}</Typography.Paragraph>
+      <div
+        dangerouslySetInnerHTML={{ __html: data?.content ?? "无内容" }}
+      ></div>
     </>
   );
 }

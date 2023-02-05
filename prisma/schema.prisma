@@ -8,12 +8,14 @@ datasource db {
 }
 
 model User {
-  id     Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   /// 头像
-  avatar String? @db.VarChar(255)
-  name   String? @unique @db.VarChar(255)
-  login  Login[]
-  posts  Post[]
+  avatar    String?  @db.VarChar(255)
+  name      String?  @unique @db.VarChar(255)
+  login     Login[]
+  posts     Post[]
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Login {
@@ -30,29 +32,30 @@ model Login {
   @@index([userId], map: "Login_userId_fkey")
 }
 
-model Post {
-  id          BigInt              @id @default(autoincrement())
-  authorId    Int
-  title       String              @db.VarChar(255)
-  contentId   BigInt              @unique
-  categories  CategoriesOnPosts[]
-  author      User                @relation(fields: [authorId], references: [id])
-  postContent PostContent         @relation(fields: [contentId], references: [id])
-
-  @@index([title])
-  @@index([authorId], map: "Post_authorId_fkey")
-}
-
 model PostContent {
   id      BigInt @id @default(autoincrement())
   content String @db.VarChar(255)
-  Post    Post?
+  post    Post   @relation(fields: [postId], references: [id])
+  postId  BigInt @unique
+}
+
+ model Post {
+  id          BigInt              @id @default(autoincrement())
+  authorId    Int
+  title       String              @db.VarChar(255)
+  categories  CategoriesOnPosts[]
+  author      User                @relation(fields: [authorId], references: [id])
+  createAt    DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  postContent PostContent?
 }
 
 model Category {
-  id    Int                 @id @default(autoincrement())
-  cat   String
-  posts CategoriesOnPosts[]
+  id        Int                 @id @default(autoincrement())
+  cat       String
+  createAt  DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  posts     CategoriesOnPosts[]
 }
 
 model CategoriesOnPosts {
