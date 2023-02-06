@@ -26,10 +26,9 @@ export default async function handler(
       },
     });
     if (post) {
-      console.log(post);
       res.status(200).json({
         title: post?.title,
-        content: post?.postContent.content,
+        content: post?.postContent?.content,
         id: post?.id ? parseInt(post.id.toString()) : undefined,
         code: 0,
       });

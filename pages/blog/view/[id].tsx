@@ -11,7 +11,6 @@ import { request } from "@/utils/request";
 export default function Index({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(data);
   const globalState = useAppSelector(selectGlobal);
   return (
     <>
@@ -36,10 +35,8 @@ export const getServerSideProps: GetServerSideProps<{
   data?: Data;
 }> = async (context) => {
   // Fetch data from external API
-  console.log(context);
   if (typeof context.query.id === "string") {
     const id: number = parseInt(context.query.id || "0");
-    console.log(id);
     return request<Data>("http://localhost:3000/api/post/get", {
       method: "get",
       params: { id },

@@ -67,7 +67,6 @@ const request: IRequest = (url: string, opts: any = { method: "GET" }) => {
   } else {
     url = "http://localhost:3000/" + url;
   }
-  console.log(url);
   const requestInstance = getRequestInstance();
   return new Promise((resolve, reject) => {
     requestInstance

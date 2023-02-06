@@ -36,11 +36,11 @@ model PostContent {
   id      BigInt @id @default(autoincrement())
   content String @db.VarChar(255)
   post    Post   @relation(fields: [postId], references: [id])
-  postId  BigInt @unique
+  postId  Int    @unique
 }
 
- model Post {
-  id          BigInt              @id @default(autoincrement())
+model Post {
+  id          Int                 @id @default(autoincrement())
   authorId    Int
   title       String              @db.VarChar(255)
   categories  CategoriesOnPosts[]
@@ -59,7 +59,7 @@ model Category {
 }
 
 model CategoriesOnPosts {
-  postId     BigInt
+  postId     Int
   categoryId Int
   assignedAt DateTime @default(now())
   category   Category @relation(fields: [categoryId], references: [id])

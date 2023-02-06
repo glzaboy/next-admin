@@ -9,7 +9,6 @@ export type LoginParament = {
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { apiResponse } from "@/server/dto/baseResponse";
 export const login = (input: LoginParament): Promise<User | null> => {
-  console.log(input);
   if (input.loginType == LoginType.PASSWORD) {
     return loginPassword(input);
   }
@@ -70,11 +69,23 @@ export const getLoginUser = (
     } catch (err) {
       console.error(err);
       ret.login = false;
-      ret.user = { id: -1, name: "guest", avatar: "" };
+      ret.user = {
+        id: -1,
+        name: "guest",
+        avatar: "",
+        createAt: new Date(),
+        updatedAt: new Date(),
+      };
     }
   }
   ret.login = false;
-  ret.user = { id: -1, name: "guest", avatar: "" };
+  ret.user = {
+    id: -1,
+    name: "guest",
+    avatar: "",
+    createAt: new Date(),
+    updatedAt: new Date(),
+  };
   if (_res && !!!ret.login) {
     _res.redirect("/login");
   }
