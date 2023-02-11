@@ -63,9 +63,11 @@ interface IRequest {
 }
 
 const request: IRequest = (url: string, opts: any = { method: "GET" }) => {
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-  } else {
-    url = "http://localhost:3000/" + url;
+  if (isSSR) {
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+    } else {
+      url = "http://localhost:3000/" + url;
+    }
   }
   const requestInstance = getRequestInstance();
   return new Promise((resolve, reject) => {
