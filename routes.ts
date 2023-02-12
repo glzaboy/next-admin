@@ -67,7 +67,11 @@ export const routes: IRoute[] = [
       },
       {
         name: "menu.list.cardList",
-        key: "list/card",
+        key: "post/cat",
+      },
+      {
+        name: "menu.list.cat",
+        key: "post/categories",
       },
     ],
   },

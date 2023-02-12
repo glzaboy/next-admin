@@ -53,10 +53,16 @@ export default function LoginForm() {
   };
 
   function onSubmitClick() {
-    form.validate().then((values) => {
-      setupCountdown();
-      login(values);
-    });
+    form
+      .validate()
+      .then((values) => {
+        setupCountdown();
+        login(values);
+      })
+      .catch((err) => {
+        setupCountdown();
+        console.error(err);
+      });
   }
 
   // 读取 localStorage，设置初始值
