@@ -58,8 +58,8 @@ export const routes: IRoute[] = [
     ],
   },
   {
-    name: "menu.list",
-    key: "list",
+    name: "menu.post",
+    key: "post",
     children: [
       {
         name: "menu.list.searchTable",

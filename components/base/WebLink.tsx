@@ -5,21 +5,37 @@ const WebLink = ({
   pathname,
   query,
   status,
+  handleClick,
 }: {
   children: any;
-  pathname: string;
-  query: any;
+  pathname?: string;
+  query?: any;
   status?: "success" | "error" | "warning";
+  handleClick?: () => void;
 }) => {
-  return (
-    <Link
-      href={{
-        pathname,
-        query,
-      }}
-    >
-      <ArcoLink status={status}>{children}</ArcoLink>
-    </Link>
-  );
+  console.log(typeof handleClick);
+  if (handleClick != undefined && typeof handleClick == "function") {
+    return (
+      <ArcoLink
+        status={status}
+        onClick={() => {
+          handleClick();
+        }}
+      >
+        {children}
+      </ArcoLink>
+    );
+  } else {
+    return (
+      <Link
+        href={{
+          pathname,
+          query,
+        }}
+      >
+        <ArcoLink status={status}>{children}</ArcoLink>
+      </Link>
+    );
+  }
 };
 export default WebLink;

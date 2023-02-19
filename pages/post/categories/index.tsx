@@ -1,6 +1,15 @@
 import { LayoutDefault } from "@/components/Layout";
 import Head from "next/head";
-import { Grid, List, Pagination } from "@arco-design/web-react";
+import {
+  Grid,
+  List,
+  Card,
+  Space,
+  Button,
+  Modal,
+  Form,
+  Input,
+} from "@arco-design/web-react";
 import locale from "@/locale/post";
 import useLocale from "@/utils/useLocale";
 import styles from "./style/index.module.less";
@@ -8,6 +17,9 @@ import { useEffect, useState } from "react";
 import { Category } from "@prisma/client";
 import { requestMsg } from "@/utils/request";
 import type { Data } from "@/pages/api/post/categories/list";
+import { IconDownload, IconPlus } from "@arco-design/web-react/icon";
+import cs from "classnames";
+import WebLink from "@/components/base/WebLink";
 
 export default function Index() {
   const t = useLocale(locale);
@@ -25,6 +37,13 @@ export default function Index() {
   useEffect(() => {
     fetchData(1, 10);
   }, []);
+  const [form] = Form.useForm();
+  const editForm = (item: Category) => {
+    form.setFieldsValue(item);
+    console.log(item);
+    setVisible(true);
+  };
+  const [visible, setVisible] = useState(false);
   return (
     <>
       <Head>
@@ -35,26 +54,88 @@ export default function Index() {
         />
         <title>{t["post.category.title"]}</title>
       </Head>
-      <Grid.Row gutter={{ xs: 4, sm: 6, md: 12 }}>
-        <Grid.Col md={12} xs={24} sm={24}>
-          <div className={styles.content2}>
-            <List
-              pagination={{
-                total,
-                showTotal: true,
-                onChange: (page, size) => {
-                  fetchData(page, size);
-                },
-                showJumper: true,
-              }}
-              dataSource={data}
-              render={(item, index) => {
-                return <List.Item key={index}>{item.cat}</List.Item>;
-              }}
-            ></List>
-          </div>
-        </Grid.Col>
-      </Grid.Row>
+      <Modal
+        title={t["post.edit.Title"]}
+        visible={visible}
+        onCancel={() => setVisible(false)}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item label="id" field="id" hidden={true}>
+            <Input placeholder="please enter your username..." />
+          </Form.Item>
+          <Form.Item label="类别" field="cat">
+            <Input placeholder="please enter your username..." />
+          </Form.Item>
+          <Form.Item label="类别" field="createAt">
+            <Input placeholder="please enter your username..." />
+          </Form.Item>
+          <Form.Item label="类别" field="updatedAt">
+            <Input placeholder="please enter your username..." />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Card>
+        <Grid.Row gutter={{ xs: 4, sm: 6, md: 12 }}>
+          <Grid.Col span={24}>
+            <div
+              className={cs(styles["line_action"], styles["main_background"])}
+            >
+              <Space />
+              <Space>
+                <WebLink
+                  handleClick={() =>
+                    editForm({
+                      cat: "",
+                      id: 0,
+                      createAt: new Date(),
+                      updatedAt: new Date(),
+                    })
+                  }
+                >
+                  <IconPlus />
+                  {t["post.new"]}
+                </WebLink>
+              </Space>
+            </div>
+          </Grid.Col>
+          <Grid.Col md={24} xs={24} sm={24}>
+            <div className={styles.content}>
+              <Card>
+                <List
+                  pagination={{
+                    total,
+                    showTotal: true,
+                    onChange: (page, size) => {
+                      fetchData(page, size);
+                    },
+                    showJumper: true,
+                  }}
+                  dataSource={data}
+                  render={(item, index) => {
+                    return (
+                      <List.Item key={index}>
+                        <div className={styles["line"]}>
+                          <Space>{item.cat}</Space>
+                          <Space>
+                            <WebLink
+                              pathname="/post/category/edit/"
+                              handleClick={() => {
+                                editForm(item);
+                              }}
+                            >
+                              {t["post.category.edit"]}
+                            </WebLink>
+                          </Space>
+                        </div>
+                      </List.Item>
+                    );
+                  }}
+                ></List>
+              </Card>
+            </div>
+          </Grid.Col>
+        </Grid.Row>
+      </Card>
     </>
   );
 }
