@@ -7,6 +7,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<apiResponse>
 ) {
-  deleteCookie(res, "auth", { path: "/" });
+  deleteCookie(res, "auth", { path: "/", httpOnly: true });
   res.send({ code: 0, msg: "ok" });
 }
