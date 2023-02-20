@@ -5,7 +5,6 @@ import {
   List,
   Card,
   Space,
-  Button,
   Modal,
   Form,
   Input,
@@ -20,6 +19,7 @@ import type { Data } from "@/pages/api/post/categories/list";
 import { IconDownload, IconPlus } from "@arco-design/web-react/icon";
 import cs from "classnames";
 import WebLink from "@/components/base/WebLink";
+import type { Data as EditData } from "@/pages/api/post/categories/edit";
 
 export default function Index() {
   const t = useLocale(locale);
@@ -43,6 +43,19 @@ export default function Index() {
     console.log(item);
     setVisible(true);
   };
+  const handleOk = () => {
+    form
+      .validate()
+      .then((values) => {
+        requestMsg<EditData>("/api/post/categories/edit", {
+          method: "post",
+          data: values,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
   const [visible, setVisible] = useState(false);
   return (
     <>
@@ -58,6 +71,7 @@ export default function Index() {
         title={t["post.edit.Title"]}
         visible={visible}
         onCancel={() => setVisible(false)}
+        onOk={handleOk}
       >
         <Form form={form} layout="vertical">
           <Form.Item label="id" field="id" hidden={true}>

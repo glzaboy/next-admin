@@ -1,6 +1,6 @@
 import { apiResponse } from "@/server/dto/baseResponse";
 import prisma from "@/server/prisma";
-import { Category } from "@prisma/client";
+import type { Category } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export type Data = {
