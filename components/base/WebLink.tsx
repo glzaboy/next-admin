@@ -13,7 +13,6 @@ const WebLink = ({
   status?: "success" | "error" | "warning";
   handleClick?: () => void;
 }) => {
-  console.log(typeof handleClick);
   if (handleClick != undefined && typeof handleClick == "function") {
     return (
       <ArcoLink

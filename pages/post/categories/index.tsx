@@ -8,12 +8,13 @@ import {
   Modal,
   Form,
   Input,
+  Message,
 } from "@arco-design/web-react";
 import locale from "@/locale/post";
 import useLocale from "@/utils/useLocale";
 import styles from "./style/index.module.less";
 import { useEffect, useState } from "react";
-import { Category } from "@prisma/client";
+import type { Category } from "@prisma/client";
 import { requestMsg } from "@/utils/request";
 import type { Data } from "@/pages/api/post/categories/list";
 import { IconDownload, IconPlus } from "@arco-design/web-react/icon";
@@ -25,6 +26,7 @@ export default function Index() {
   const t = useLocale(locale);
   const [data, setData] = useState<Category[]>([]);
   const [total, setTotal] = useState<number>(0);
+  const [page, setPage] = useState<number>(0);
   const fetchData = (page: number, size: number) => {
     requestMsg<Data>("/api/post/categories/list", {
       method: "post",
@@ -32,6 +34,7 @@ export default function Index() {
     }).then((res) => {
       setData(res.categories || []);
       setTotal(res.total || 0);
+      setPage(page);
     });
   };
   useEffect(() => {
@@ -50,6 +53,11 @@ export default function Index() {
         requestMsg<EditData>("/api/post/categories/edit", {
           method: "post",
           data: values,
+        }).then((data) => {
+          console.log(data);
+          Message.info("操作成功");
+          setVisible(false);
+          fetchData(page, 10);
         });
       })
       .catch((err) => {

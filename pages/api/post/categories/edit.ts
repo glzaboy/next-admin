@@ -18,7 +18,7 @@ export default async function handler(
       .then((data) => {
         prisma.category
           .update({
-            data: { cat: cat.cat },
+            data: { cat: cat.cat, updatedAt: new Date() },
             where: { id: cat.id },
           })
           .then((data) => {
