@@ -16,11 +16,12 @@ import {
 } from "@arco-design/web-react/icon";
 import MessageList, { MessageListType } from "./list";
 import styles from "./style/index.module.less";
-import useLocale from "@/utils/useLocale";
+import useLocale, { useLocaleName } from "@/utils/useLocale";
 import { requestMsg } from "@/utils/request";
 
 function DropContent() {
   const t = useLocale();
+  const lang = useLocaleName();
   const [loading, setLoading] = useState(false);
   const [groupData, setGroupData] = useState<{
     [key: string]: MessageListType;
@@ -29,7 +30,7 @@ function DropContent() {
 
   function fetchSourceData(showLoading = true) {
     showLoading && setLoading(true);
-    requestMsg<MessageListType>("/api/message/list")
+    requestMsg<MessageListType>("/api/message/list", { lang: lang })
       .then((res) => {
         setSourceData(res);
       })

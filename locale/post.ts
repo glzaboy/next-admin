@@ -8,6 +8,8 @@ const i18n = {
     "post.category.field.createTime": "Create Time",
     "post.category.field.updateTime": "Update Time",
     "post.category.delete": "Delete",
+    "post.category.delete.confirm": "Do you sure delete?",
+    "post.list": "Post List",
   },
   "zh-CN": {
     "post.category.title": "类别管理",
@@ -18,6 +20,8 @@ const i18n = {
     "post.category.field.createTime": "创建时间",
     "post.category.field.updateTime": "更新时间",
     "post.category.delete": "删除",
+    "post.category.delete.confirm": "你确定要删除？",
+    "post.list": "文章列表",
   },
 };
 

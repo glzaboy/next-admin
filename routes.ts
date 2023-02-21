@@ -66,8 +66,13 @@ export const routes: IRoute[] = [
         key: "list/search-table",
       },
       {
-        name: "menu.list.cardList",
-        key: "post/cat",
+        name: "menu.post.list",
+        key: "post/list",
+      },
+      {
+        name: "menu.post.list",
+        key: "post/edit/[id]",
+        // ignore: true,
       },
       {
         name: "menu.list.cat",

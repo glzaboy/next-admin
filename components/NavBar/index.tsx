@@ -159,12 +159,6 @@ function Navbar({ show }: { show: boolean }) {
       </div>
       <ul className={styles.right}>
         <li>
-          <Input.Search
-            className={styles.round}
-            placeholder={t["navbar.search.placeholder"]}
-          />
-        </li>
-        <li>
           <Select
             triggerElement={<IconButton icon={<IconLanguage />} />}
             options={[

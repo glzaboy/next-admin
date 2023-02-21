@@ -207,11 +207,7 @@ export const LayoutDefault = ({ children }: any) => {
         menuMap.current.set(route.key, { menuItem: true });
         return (
           <MenuItem key={route.key}>
-            <Link href={`/${route.key}`}>
-              {/* <a> */}
-              {titleDom}
-              {/* </a> */}
-            </Link>
+            <Link href={`/${route.key}`}>{titleDom}</Link>
           </MenuItem>
         );
       });

@@ -13,8 +13,8 @@ const i18n = {
     "menu.exception.404": "404",
     "menu.exception.500": "500",
     "menu.profile.basic": "Basic Profile",
-    "menu.list.cardList": "Card List",
-    "menu.list.cat": "categories manage",
+    "menu.post.list": "Post List",
+    "menu.list.cat": "Categories Manage",
     "menu.visualization.dataAnalysis": "Analysis",
     "menu.result.error": "Error",
     "menu.form.group": "Group Form",
@@ -56,7 +56,6 @@ const i18n = {
     "message.seeMore": "SeeMore",
     "message.empty": "Empty",
     "message.empty.tips": "No Content",
-    "navbar.search.placeholder": "Please search",
   },
   "zh-CN": {
     "menu.dashboard": "仪表盘",
@@ -71,7 +70,7 @@ const i18n = {
     "menu.exception.404": "404",
     "menu.exception.500": "500",
     "menu.profile.basic": "基础详情页",
-    "menu.list.cardList": "卡片列表",
+    "menu.post.list": "文章列表",
     "menu.list.cat": "类别管理",
     "menu.visualization.dataAnalysis": "分析页",
     "menu.result.error": "失败页",
@@ -114,7 +113,6 @@ const i18n = {
     "message.seeMore": "查看更多",
     "message.empty": "清空",
     "message.empty.tips": "暂无内容",
-    "navbar.search.placeholder": "输入内容查询",
   },
 };
 

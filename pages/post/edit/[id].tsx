@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { LayoutDefault } from "@/components/Layout";
 
 export default function Index() {
   return (
@@ -10,7 +11,8 @@ export default function Index() {
           href="https://unpkg.byted-static.com/latest/byted/arco-config/assets/favicon.ico"
         />
       </Head>
-      <div>ss</div>
+      <div>完善中</div>
     </>
   );
 }
+Index.Layout = LayoutDefault;

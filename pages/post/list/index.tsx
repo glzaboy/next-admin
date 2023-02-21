@@ -1,17 +1,8 @@
 import { LayoutDefault } from "@/components/Layout";
 import Head from "next/head";
-import {
-  Grid,
-  List,
-  Card,
-  Space,
-  Modal,
-  Form,
-  Input,
-  Message,
-} from "@arco-design/web-react";
+import { Grid, List, Card, Space, Form } from "@arco-design/web-react";
 import locale from "@/locale/post";
-import useLocale from "@/utils/useLocale";
+import useLocale, { useLocaleName } from "@/utils/useLocale";
 import styles from "@/pages/post/style/index.module.less";
 import { useEffect, useState } from "react";
 import type { Category } from "@prisma/client";
@@ -24,13 +15,15 @@ import type { Data as EditData } from "@/pages/api/post/categories/edit";
 
 export default function Index() {
   const t = useLocale(locale);
+  const lang = useLocaleName();
   const [data, setData] = useState<Category[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
   const fetchData = (page: number, size: number) => {
-    requestMsg<Data>("/api/post/categories/list", {
+    requestMsg<Data>("/api/post/list", {
       method: "post",
       data: { page, size },
+      lang,
     }).then((res) => {
       setData(res.categories || []);
       setTotal(res.total || 0);
@@ -39,47 +32,8 @@ export default function Index() {
   };
   useEffect(() => {
     fetchData(1, 10);
-  }, []);
+  }, [fetchData]);
   const [form] = Form.useForm();
-  const editForm = (item: Category) => {
-    form.setFieldsValue(item);
-    console.log(item);
-    setVisible(true);
-  };
-  const handleOk = () => {
-    form
-      .validate()
-      .then((values) => {
-        requestMsg<EditData>("/api/post/categories/edit", {
-          method: "post",
-          data: values,
-        }).then((data) => {
-          console.log(data);
-          Message.info("操作成功");
-          setVisible(false);
-          fetchData(page, 10);
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-  const handleDelete = (id: number) => {
-    requestMsg<EditData>("/api/post/categories/delete", {
-      method: "post",
-      data: { id },
-    })
-      .then((data) => {
-        console.log(data);
-        Message.info("操作成功");
-        setVisible(false);
-        fetchData(page, 10);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-  const [visible, setVisible] = useState(false);
   return (
     <>
       <Head>
@@ -88,35 +42,8 @@ export default function Index() {
           type="image/x-icon"
           href="https://unpkg.byted-static.com/latest/byted/arco-config/assets/favicon.ico"
         />
-        <title>{t["post.category.title"]}</title>
+        <title>{t["post.list"]}</title>
       </Head>
-      <Modal
-        title={t["post.edit.Title"]}
-        visible={visible}
-        onCancel={() => setVisible(false)}
-        onOk={handleOk}
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item label="id" field="id" hidden={true}>
-            <Input placeholder="please enter your username..." />
-          </Form.Item>
-          <Form.Item label={t["post.category.field.name"]} field="cat">
-            <Input placeholder={t["post.category.field.name"]} />
-          </Form.Item>
-          <Form.Item
-            label={t["post.category.field.createTime"]}
-            field="createAt"
-          >
-            <Input placeholder={t["post.category.field.createTime"]} readOnly />
-          </Form.Item>
-          <Form.Item
-            label={t["post.category.field.updateTime"]}
-            field="updatedAt"
-          >
-            <Input placeholder={t["post.category.field.updateTime"]} readOnly />
-          </Form.Item>
-        </Form>
-      </Modal>
       <Card>
         <Grid.Row gutter={{ xs: 4, sm: 6, md: 12 }}>
           <Grid.Col span={24}>
@@ -125,16 +52,7 @@ export default function Index() {
             >
               <Space />
               <Space>
-                <WebLink
-                  handleClick={() =>
-                    editForm({
-                      cat: "",
-                      id: 0,
-                      createAt: new Date(),
-                      updatedAt: new Date(),
-                    })
-                  }
-                >
+                <WebLink pathname="/post/edit/0">
                   <IconPlus />
                   {t["post.new"]}
                 </WebLink>
