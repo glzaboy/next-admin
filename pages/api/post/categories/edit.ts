@@ -18,11 +18,11 @@ export default async function handler(
       .then((data) => {
         prisma.category
           .update({
-            data: { cat: cat.cat, updatedAt: new Date() },
+            data: { cat: cat.cat },
             where: { id: cat.id },
           })
           .then((data) => {
-            res.status(200).json({ code: 0, msg: "", category: data });
+            res.status(200).json({ code: 0, msg: "更新成功", category: data });
           });
       })
       .catch((err) => {
@@ -31,8 +31,15 @@ export default async function handler(
       });
   } else {
     var cat: Category = { ...req.body };
-    prisma.category.create({ data: cat }).then((_) => {
-      res.status(200).json({ code: 0, msg: "", category: _ });
-    });
+    console.log(cat);
+    prisma.category
+      .create({ data: { cat: cat.cat } })
+      .then((_) => {
+        res.status(200).json({ code: 0, msg: "", category: _ });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(200).json({ code: -1, msg: "出错" + err });
+      });
   }
 }

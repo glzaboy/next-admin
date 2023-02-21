@@ -85,14 +85,20 @@ export default function Index() {
           <Form.Item label="id" field="id" hidden={true}>
             <Input placeholder="please enter your username..." />
           </Form.Item>
-          <Form.Item label="类别" field="cat">
-            <Input placeholder="please enter your username..." />
+          <Form.Item label={t["post.category.field.name"]} field="cat">
+            <Input placeholder={t["post.category.field.name"]} />
           </Form.Item>
-          <Form.Item label="类别" field="createAt">
-            <Input placeholder="please enter your username..." />
+          <Form.Item
+            label={t["post.category.field.createTime"]}
+            field="createAt"
+          >
+            <Input placeholder={t["post.category.field.createTime"]} readOnly />
           </Form.Item>
-          <Form.Item label="类别" field="updatedAt">
-            <Input placeholder="please enter your username..." />
+          <Form.Item
+            label={t["post.category.field.updateTime"]}
+            field="updatedAt"
+          >
+            <Input placeholder={t["post.category.field.updateTime"]} readOnly />
           </Form.Item>
         </Form>
       </Modal>
@@ -146,6 +152,14 @@ export default function Index() {
                               }}
                             >
                               {t["post.category.edit"]}
+                            </WebLink>
+                            <WebLink
+                              pathname="/post/category/edit/"
+                              handleClick={() => {
+                                editForm(item);
+                              }}
+                            >
+                              {t["post.category.delete"]}
                             </WebLink>
                           </Space>
                         </div>
