@@ -81,7 +81,7 @@ export default function Index() {
                             <WebLink
                               pathname="/post/category/edit/"
                               handleClick={() => {
-                                editForm(item);
+                                // editForm(item);
                               }}
                             >
                               {t["post.category.edit"]}
@@ -90,7 +90,7 @@ export default function Index() {
                               status="warning"
                               confirmText={t["post.category.delete.confirm"]}
                               handleClick={() => {
-                                handleDelete(item.id);
+                                // handleDelete(item.id);
                               }}
                             >
                               {t["post.category.delete"]}
