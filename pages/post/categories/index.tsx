@@ -11,9 +11,9 @@ import {
   Message,
 } from "@arco-design/web-react";
 import locale from "@/locale/post";
-import useLocale from "@/utils/useLocale";
+import useLocale, { useLocaleName } from "@/utils/useLocale";
 import styles from "@/pages/post/style/index.module.less";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Category } from "@prisma/client";
 import { requestMsg } from "@/utils/request";
 import type { Data } from "@/pages/api/post/categories/list";
@@ -26,22 +26,32 @@ import { useMediaQuery } from "react-responsive";
 export default function Index() {
   const isSmallScreen = useMediaQuery({ maxWidth: 767 });
   const t = useLocale(locale);
+  const lang = useLocaleName();
   const [data, setData] = useState<Category[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
-  const fetchData = (page: number, size: number) => {
-    requestMsg<Data>("/api/post/categories/list", {
-      method: "post",
-      data: { page, size },
-    }).then((res) => {
-      setData(res.categories || []);
-      setTotal(res.total || 0);
-      setPage(page);
-    });
-  };
+  const fetchDataCallBack = useCallback(() => {
+    console.log("xxx");
+    const fetchData = (page: number, size: number) => {
+      requestMsg<Data>("/api/post/categories/list", {
+        method: "post",
+        data: { page, size },
+        lang,
+      }).then((res) => {
+        setData(res.categories || []);
+        setTotal(res.total || 0);
+      });
+    };
+    if (page > 0) {
+      fetchData(page, 10);
+    }
+  }, [lang, page]);
   useEffect(() => {
-    fetchData(1, 10);
+    setPage(1);
   }, []);
+  useEffect(() => {
+    fetchDataCallBack();
+  }, [fetchDataCallBack]);
   const [form] = Form.useForm();
   const editForm = (item: Category) => {
     form.setFieldsValue(item);
@@ -59,7 +69,7 @@ export default function Index() {
           console.log(data);
           Message.info("操作成功");
           setVisible(false);
-          fetchData(page, 10);
+          fetchDataCallBack();
         });
       })
       .catch((err) => {
@@ -75,7 +85,8 @@ export default function Index() {
         console.log(data);
         Message.info("操作成功");
         setVisible(false);
-        fetchData(page, 10);
+        fetchDataCallBack();
+        // fetchData(page, 10);
       })
       .catch((err) => {
         console.error(err);
@@ -156,7 +167,8 @@ export default function Index() {
                     total,
                     showTotal: true,
                     onChange: (page, size) => {
-                      fetchData(page, size);
+                      // fetchData(page, size);
+                      setPage(page);
                     },
                     showJumper: true,
                   }}
@@ -173,16 +185,16 @@ export default function Index() {
                                 editForm(item);
                               }}
                             >
-                              {t["post.category.edit"]}
+                              {t["post.edit"]}
                             </WebLink>
                             <WebLink
                               status="warning"
-                              confirmText={t["post.category.delete.confirm"]}
+                              confirmText={t["post.delete.confirm"]}
                               handleClick={() => {
                                 handleDelete(item.id);
                               }}
                             >
-                              {t["post.category.delete"]}
+                              {t["post.delete"]}
                             </WebLink>
                           </Space>
                         </div>

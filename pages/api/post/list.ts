@@ -1,10 +1,10 @@
 import { apiResponse } from "@/server/dto/baseResponse";
 import prisma from "@/server/prisma";
-import type { Category } from "@prisma/client";
+import type { Category, Post } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export type Data = {
-  categories?: Array<Category>;
+  post?: Array<Post>;
   total?: number;
 } & apiResponse;
 
@@ -12,23 +12,36 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  console.log(req.body);
-  const { page, size }: { page: number; size: number } = req.body;
-  const categories = await prisma.category.findMany({
+  const {
+    page,
+    size,
+    catId: categoryId,
+  }: { page: number; size: number; catId?: number } = req.body;
+  const post = await prisma.post.findMany({
     orderBy: [{ id: "desc" }],
-    select: {
-      id: true,
-      cat: true,
-      createAt: true,
-      updatedAt: true,
+    where: {
+      categories: {
+        some: {
+          categoryId: categoryId,
+        },
+      },
+      // categories: {},
     },
     take: size ?? 10,
     skip: ((page ?? 1) - 1) * (size ?? 10),
   });
-  const total = await prisma.category.count();
-  if (categories) {
+  const total = await prisma.post.count({
+    where: {
+      categories: {
+        some: {
+          categoryId: categoryId,
+        },
+      },
+    },
+  });
+  if (post) {
     res.status(200).json({
-      categories,
+      post,
       total,
       code: 0,
     });
