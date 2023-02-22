@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { apiResponse } from "@/server/dto/baseResponse";
 import prisma from "@/server/prisma";
-import getUrlParams from "@/utils/getUrlParams";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export type Data = {

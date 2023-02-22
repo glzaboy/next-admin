@@ -21,8 +21,10 @@ import { IconPlus } from "@arco-design/web-react/icon";
 import cs from "classnames";
 import WebLink from "@/components/base/WebLink";
 import type { Data as EditData } from "@/pages/api/post/categories/edit";
+import { useMediaQuery } from "react-responsive";
 
 export default function Index() {
+  const isSmallScreen = useMediaQuery({ maxWidth: 767 });
   const t = useLocale(locale);
   const [data, setData] = useState<Category[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -80,6 +82,7 @@ export default function Index() {
       });
   };
   const [visible, setVisible] = useState(false);
+
   return (
     <>
       <Head>
@@ -95,6 +98,10 @@ export default function Index() {
         visible={visible}
         onCancel={() => setVisible(false)}
         onOk={handleOk}
+        style={{
+          width: isSmallScreen ? "100%" : "520px",
+          height: isSmallScreen ? "100%" : "auto",
+        }}
       >
         <Form form={form} layout="vertical">
           <Form.Item label="id" field="id" hidden={true}>
