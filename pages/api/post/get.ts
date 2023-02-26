@@ -6,6 +6,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 export type Data = {
   title?: string;
   content?: string;
+  categories?: { categoryId: number }[];
   id?: number;
 } & apiResponse;
 
@@ -13,7 +14,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  // Prisma.Post;
   const { id } = req.query;
   if (typeof id == "string") {
     const post = await prisma.post.findUnique({
@@ -22,13 +22,20 @@ export default async function handler(
         title: true,
         postContent: { select: { content: true } },
         id: true,
+        categories: {
+          select: {
+            categoryId: true,
+          },
+        },
       },
     });
+    console.log(post);
     if (post) {
       res.status(200).json({
         title: post?.title,
         content: post?.postContent?.content,
         id: post?.id ? parseInt(post.id.toString()) : undefined,
+        categories: post.categories,
         code: 0,
       });
     } else {

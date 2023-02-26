@@ -15,7 +15,7 @@ export const useTimeOut = (timeOut: number, fn: () => void) => {
       console.log("tick timer destroy");
       clearTimeout(timer.current);
     };
-  }, []);
+  }, [fn, timeOut]);
 };
 /**
  * 周期性回调
@@ -72,7 +72,7 @@ export const useCountdown = (duration: number) => {
         setCountdown((current) => current - 1);
       }, 1000);
     } else clearInterval(timer.current as NodeJS.Timeout);
-  }, [isSetup]);
+  }, [isSetup, duration]);
 
   useEffect(() => {
     if (countdown === 0) {

@@ -1,6 +1,6 @@
 import { LayoutDefault } from "@/components/Layout";
 import Head from "next/head";
-import { Grid, List, Card, Space, Form, Select } from "@arco-design/web-react";
+import { Grid, List, Card, Space, Select } from "@arco-design/web-react";
 import locale from "@/locale/post";
 import useLocale, { useLocaleName } from "@/utils/useLocale";
 import styles from "@/pages/post/style/index.module.less";
@@ -12,7 +12,6 @@ import { IconPlus } from "@arco-design/web-react/icon";
 import cs from "classnames";
 import WebLink from "@/components/base/WebLink";
 import type { Data as CatData } from "@/pages/api/post/categories/list";
-import type { Data as EditData } from "@/pages/api/post/categories/edit";
 
 export default function Index() {
   const t = useLocale(locale);
@@ -126,10 +125,8 @@ export default function Index() {
                           <Space>{item.title}</Space>
                           <Space>
                             <WebLink
-                              pathname="/post/category/edit/"
-                              handleClick={() => {
-                                // editForm(item);
-                              }}
+                              pathname="/post/edit/[id]"
+                              query={{ id: item.id }}
                             >
                               {t["post.edit"]}
                             </WebLink>

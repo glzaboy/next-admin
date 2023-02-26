@@ -1,14 +1,20 @@
 import defaultLocale from "@/locale";
 import { selectGlobal } from "@/modules/global";
-import { useAppSelector, useAppDispatch } from "@/modules/store";
+import { useAppSelector } from "@/modules/store";
 
+/**
+ * 获取用户翻译项目
+ * @param locale 语言翻译文件
+ * @returns 翻译项目
+ */
 function useLocale(locale: any = null): Record<string, string> {
-  const globalState = useAppSelector(selectGlobal);
-  const dispatch = useAppDispatch();
-
-  return (locale || defaultLocale)[globalState.lang || "zh-CN"] || {};
+  return (locale || defaultLocale)[useLocaleName()] || {};
 }
-export function useLocaleName(locale: any = null): string {
+/**
+ * 返回客户端使用语言名称
+ * @returns 语言名称
+ */
+export function useLocaleName(): string {
   const globalState = useAppSelector(selectGlobal);
 
   return globalState.lang || "zh-CN";

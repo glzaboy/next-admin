@@ -4,7 +4,7 @@ import { apiResponse } from "@/server/dto/baseResponse";
 import { deleteCookie } from "@/server/utils/cookie";
 
 export default async function handler(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse<apiResponse>
 ) {
   deleteCookie(res, "auth", { path: "/", httpOnly: true });
