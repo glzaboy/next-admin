@@ -33,9 +33,6 @@ export default async function handler(
           title: title,
           author: { connect: { id: user.user?.id || 0 } },
           postContent: { update: { content: content } },
-          categories: {
-            set: [{ postId_categoryId: { postId: id, categoryId: 1 } }],
-          },
         },
       });
       console.log("delete");
