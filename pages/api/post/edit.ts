@@ -34,37 +34,30 @@ export default async function handler(
           author: { connect: { id: user.user?.id || 0 } },
           postContent: { update: { content: content } },
           categories: {
-            connect: [{ postId_categoryId: { postId: 1, categoryId: 1 } }],
-            connectOrCreate: [],
+            set: [{ postId_categoryId: { postId: id, categoryId: 1 } }],
           },
         },
       });
       console.log("delete");
       await tx.categoriesOnPosts.deleteMany({
-        // where: {
-        //   //postId_categoryId: { postId: 24, categoryId: 24 },
-        // },
+        where: {
+          postId: id,
+        },
       });
       console.log("delete end");
-      // console.log(post);
-      // tx.categoriesOnPosts.deleteMany({
-      //   where: {
-      //     postId: post.id,
-      //   },
-      // });
-      // const catMap: Array<CategoriesOnPosts> = [];
-      // categoryId?.forEach((item, index) => {
-      //   console.log(item);
-      //   catMap.push({
-      //     postId: post.id,
-      //     categoryId: item,
-      //     assignedAt: new Date(),
-      //   });
-      // });
-      // console.log(catMap);
-      // await tx.categoriesOnPosts.createMany({
-      //   data: catMap,
-      // });
+      const catMap: Array<CategoriesOnPosts> = [];
+      categoryId?.forEach((item, index) => {
+        console.log(item);
+        catMap.push({
+          postId: post.id,
+          categoryId: item,
+          assignedAt: new Date(),
+        });
+      });
+      await tx.categoriesOnPosts.createMany({
+        data: catMap,
+      });
+      console.log("create end");
       res.status(200).send({ code: 0, msg: "处理成功" });
     });
   } else {
