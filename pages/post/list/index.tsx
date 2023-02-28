@@ -1,7 +1,8 @@
 import { LayoutDefault } from "@/components/Layout";
 import Head from "next/head";
 import { Grid, List, Card, Space, Select } from "@arco-design/web-react";
-import locale from "@/locale/post";
+import formLocale from "@/locale/form";
+import postLocale from "@/locale/post";
 import useLocale, { useLocaleName } from "@/utils/useLocale";
 import styles from "@/pages/post/style/index.module.less";
 import { useCallback, useEffect, useState } from "react";
@@ -14,7 +15,8 @@ import WebLink from "@/components/base/WebLink";
 import type { Data as CatData } from "@/pages/api/post/categories/list";
 
 export default function Index() {
-  const t = useLocale(locale);
+  const postL = useLocale(postLocale);
+  const formL = useLocale(formLocale);
   const lang = useLocaleName();
   const [data, setData] = useState<Post[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -64,7 +66,7 @@ export default function Index() {
           type="image/x-icon"
           href="https://unpkg.byted-static.com/latest/byted/arco-config/assets/favicon.ico"
         />
-        <title>{t["post.list"]}</title>
+        <title>{postL["post.list"]}</title>
       </Head>
       <Card>
         <Grid.Row gutter={{ xs: 4, sm: 6, md: 12 }}>
@@ -128,7 +130,7 @@ export default function Index() {
                               pathname="/post/edit/[id]"
                               query={{ id: item.id }}
                             >
-                              {t["post.edit"]}
+                              {formL["post.edit"]}
                             </WebLink>
                             <WebLink
                               status="warning"

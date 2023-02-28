@@ -2,26 +2,35 @@ import Head from "next/head";
 import { LayoutDefault } from "@/components/Layout";
 import dynamic from "next/dynamic";
 import { useState, useCallback, useEffect } from "react";
-import { Button, Form, Input, Card, Select } from "@arco-design/web-react";
+import {
+  Button,
+  Form,
+  Input,
+  Card,
+  Select,
+  Message,
+} from "@arco-design/web-react";
 
 import { requestMsg } from "@/utils/request";
 import formLocale from "@/locale/form";
+import postLocale from "@/locale/post";
 import useLocale, { useLocaleName } from "@/utils/useLocale";
 
 import type { Data as CatData } from "@/pages/api/post/categories/list";
 const DynamicEditor = dynamic(() => import("@/components/Editor"), {
   ssr: false,
-  // suspense: true,
 });
-import { apiResponse } from "@/server/dto/baseResponse";
 import { Category } from "@prisma/client";
 import { useRouter } from "next/router";
 import { Data as PostData } from "@/pages/api/post/get";
+import { Data as EditData } from "@/pages/api/post/edit";
 
 export default function Index() {
   const router = useRouter();
   const formL = useLocale(formLocale);
+  const postL = useLocale(postLocale);
   const lang = useLocaleName();
+
   const [html, setHtml] = useState<string>("");
   const [id, setId] = useState<number>(0);
   const [form] = Form.useForm();
@@ -79,10 +88,17 @@ export default function Index() {
     form
       .validate()
       .then((values) => {
-        requestMsg<apiResponse>("/api/post/edit", {
+        requestMsg<EditData>("/api/post/edit", {
           method: "post",
           data: values,
-        }).finally(() => {});
+        })
+          .then((res) => {
+            if (id == 0) {
+              setId(res.id);
+            }
+            Message.info("保存成功，您可以继续编辑");
+          })
+          .finally(() => {});
       })
       .catch((err) => {
         console.error(err);
@@ -100,13 +116,16 @@ export default function Index() {
       <div>
         <Card>
           <Form layout="vertical" form={form}>
-            <Form.Item label="标题" field="id">
+            <Form.Item label="ID" field="id" hidden={true}>
               <Input />
             </Form.Item>
-            <Form.Item label="标题" field="title">
+            <Form.Item label={postL["post.title"]} field="title">
               <Input />
             </Form.Item>
-            <Form.Item label="类目" field="categoryId">
+            <Form.Item
+              label={postL["post.category.field.name"]}
+              field="categoryId"
+            >
               <Select allowClear mode="multiple">
                 {categories &&
                   categories.map((value, _index) => {
@@ -118,7 +137,7 @@ export default function Index() {
                   })}
               </Select>
             </Form.Item>
-            <Form.Item label="标题" field="content" hidden={true}>
+            <Form.Item field="content" hidden={true}>
               <Input />
             </Form.Item>
             <Form.Item>

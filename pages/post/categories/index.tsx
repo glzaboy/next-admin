@@ -10,7 +10,8 @@ import {
   Input,
   Message,
 } from "@arco-design/web-react";
-import locale from "@/locale/post";
+import postLocale from "@/locale/post";
+import formLocale from "@/locale/form";
 import useLocale, { useLocaleName } from "@/utils/useLocale";
 import styles from "@/pages/post/style/index.module.less";
 import { useCallback, useEffect, useState } from "react";
@@ -25,13 +26,13 @@ import { useMediaQuery } from "react-responsive";
 
 export default function Index() {
   const isSmallScreen = useMediaQuery({ maxWidth: 767 });
-  const t = useLocale(locale);
+  const postL = useLocale(postLocale);
+  const formL = useLocale(formLocale);
   const lang = useLocaleName();
   const [data, setData] = useState<Category[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
   const fetchDataCallBack = useCallback(() => {
-    console.log("xxx");
     const fetchData = (page: number, size: number) => {
       requestMsg<Data>("/api/post/categories/list", {
         method: "post",
@@ -86,7 +87,6 @@ export default function Index() {
         Message.info("操作成功");
         setVisible(false);
         fetchDataCallBack();
-        // fetchData(page, 10);
       })
       .catch((err) => {
         console.error(err);
@@ -102,10 +102,10 @@ export default function Index() {
           type="image/x-icon"
           href="https://unpkg.byted-static.com/latest/byted/arco-config/assets/favicon.ico"
         />
-        <title>{t["post.category.title"]}</title>
+        <title>{postL["post.category.title"]}</title>
       </Head>
       <Modal
-        title={t["post.edit.Title"]}
+        title={postL["post.edit.Title"]}
         visible={visible}
         onCancel={() => setVisible(false)}
         onOk={handleOk}
@@ -118,20 +118,14 @@ export default function Index() {
           <Form.Item label="id" field="id" hidden={true}>
             <Input placeholder="please enter your username..." />
           </Form.Item>
-          <Form.Item label={t["post.category.field.name"]} field="cat">
-            <Input placeholder={t["post.category.field.name"]} />
+          <Form.Item label={postL["post.category.field.name"]} field="cat">
+            <Input placeholder={postL["post.category.field.name"]} />
           </Form.Item>
-          <Form.Item
-            label={t["post.category.field.createTime"]}
-            field="createAt"
-          >
-            <Input placeholder={t["post.category.field.createTime"]} readOnly />
+          <Form.Item label={formL["createTime"]} field="createAt">
+            <Input placeholder={formL["createTime"]} readOnly />
           </Form.Item>
-          <Form.Item
-            label={t["post.category.field.updateTime"]}
-            field="updatedAt"
-          >
-            <Input placeholder={t["post.category.field.updateTime"]} readOnly />
+          <Form.Item label={formL["updateTime"]} field="updatedAt">
+            <Input placeholder={formL["updateTime"]} readOnly />
           </Form.Item>
         </Form>
       </Modal>
@@ -154,7 +148,7 @@ export default function Index() {
                   }
                 >
                   <IconPlus />
-                  {t["post.new"]}
+                  {formL["new"]}
                 </WebLink>
               </Space>
             </div>
@@ -167,7 +161,6 @@ export default function Index() {
                     total,
                     showTotal: true,
                     onChange: (page, size) => {
-                      // fetchData(page, size);
                       setPage(page);
                     },
                     showJumper: true,
@@ -185,16 +178,16 @@ export default function Index() {
                                 editForm(item);
                               }}
                             >
-                              {t["post.edit"]}
+                              {formL["edit"]}
                             </WebLink>
                             <WebLink
                               status="warning"
-                              confirmText={t["post.delete.confirm"]}
+                              confirmText={formL["delete.confirm"]}
                               handleClick={() => {
                                 handleDelete(item.id);
                               }}
                             >
-                              {t["post.delete"]}
+                              {formL["delete"]}
                             </WebLink>
                           </Space>
                         </div>
