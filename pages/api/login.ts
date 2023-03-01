@@ -22,7 +22,7 @@ export default async function handler(
           avatar: loginUser?.avatar,
           name: loginUser?.name,
         }),
-        { path: "/", maxAge: 2592000 }
+        { path: "/", maxAge: 2592000, httpOnly: true }
       );
       res.status(200).json({ code: 0, msg: "" });
     })

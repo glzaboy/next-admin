@@ -80,11 +80,9 @@ export const getServerSideProps: GetServerSideProps<{
     method: "get",
   })
     .then((result) => {
-      console.log(result);
       return { props: { data: { ...result } } };
     })
     .catch((err) => {
-      console.error(err);
       return { notFound: true };
     });
 };

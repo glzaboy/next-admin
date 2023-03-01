@@ -35,7 +35,7 @@ export default function LoginForm() {
       removeLoginParams();
     }
     // 跳转首页
-    window.location.href = "/";
+    window.location.href = "/dashboard/workplace";
   }
   const login = (params: Record<string, string>) => {
     setErrorMessage("");
@@ -53,10 +53,16 @@ export default function LoginForm() {
   };
 
   function onSubmitClick() {
-    form.validate().then((values) => {
-      setupCountdown();
-      login(values);
-    });
+    form
+      .validate()
+      .then((values) => {
+        setupCountdown();
+        login(values);
+      })
+      .catch((err) => {
+        setupCountdown();
+        console.error(err);
+      });
   }
 
   // 读取 localStorage，设置初始值

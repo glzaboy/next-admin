@@ -44,7 +44,7 @@ function getIconFromKey(key: string) {
   switch (key) {
     case "dashboard":
       return <IconDashboard className={styles.icon} />;
-    case "list":
+    case "post":
       return <IconList className={styles.icon} />;
     case "form":
       return <IconSettings className={styles.icon} />;
@@ -207,11 +207,7 @@ export const LayoutDefault = ({ children }: any) => {
         menuMap.current.set(route.key, { menuItem: true });
         return (
           <MenuItem key={route.key}>
-            <Link href={`/${route.key}`}>
-              {/* <a> */}
-              {titleDom}
-              {/* </a> */}
-            </Link>
+            <Link href={`/${route.key}`}>{titleDom}</Link>
           </MenuItem>
         );
       });

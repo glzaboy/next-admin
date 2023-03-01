@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Tooltip,
   Input,
@@ -37,7 +37,6 @@ import MessageBox from "../MessageBox";
 import IconButton from "./IconButton";
 import Settings from "../Settings";
 import styles from "./style/index.module.less";
-import defaultLocale from "@/locale";
 import useStorage from "@/utils/useStorage";
 import useLocale from "@/utils/useLocale";
 import { generatePermission } from "@/routes";
@@ -160,12 +159,6 @@ function Navbar({ show }: { show: boolean }) {
       </div>
       <ul className={styles.right}>
         <li>
-          <Input.Search
-            className={styles.round}
-            placeholder={t["navbar.search.placeholder"]}
-          />
-        </li>
-        <li>
           <Select
             triggerElement={<IconButton icon={<IconLanguage />} />}
             options={[
@@ -181,8 +174,6 @@ function Navbar({ show }: { show: boolean }) {
             trigger="hover"
             onChange={(value: "zh-CN" | "en-US") => {
               dispatch(setLang({ lang: value }));
-              const nextLang = defaultLocale[value];
-              Message.info(`${nextLang["message.lang.tips"]}${value}`);
             }}
           />
         </li>

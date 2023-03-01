@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Drawer, Alert, Message } from "@arco-design/web-react";
 import { IconSettings } from "@arco-design/web-react/icon";
 import copy from "copy-to-clipboard";
-import { useAppSelector, useAppDispatch } from "@/modules/store";
+import { useAppSelector } from "@/modules/store";
 import { selectGlobal } from "@/modules/global";
 import Block from "./block";
 import ColorPanel from "./color";
@@ -15,7 +15,6 @@ interface SettingProps {
 
 function Setting(props: SettingProps) {
   const globalState = useAppSelector(selectGlobal);
-  const dispatch = useAppDispatch();
   const { trigger } = props;
   const [visible, setVisible] = useState(false);
   const locale = useLocale();
